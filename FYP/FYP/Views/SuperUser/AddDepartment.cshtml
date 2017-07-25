@@ -1,0 +1,36 @@
+﻿@model FYP.Models.Department
+@{
+    ViewBag.Title = "AddDepartment";
+    Layout = "~/Views/Shared/SuperUserLayout.cshtml";
+}
+
+<style>
+    .submit-btn {
+        width: 100%;
+    }
+</style>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><center><b>Add Department</b></center></div>
+                    <div class="panel-body">
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.Label("Department Name")
+                            @Html.TextBoxFor(a => a.Department_Id, new { @class = "form-control", @placeholder = "Example: Bscs" })
+                            @Html.ValidationMessageFor(a => a.Department_Id)<br>
+
+                            <input type="submit" class="btn btn-primary submit-btn" value="Add">
+                        }
+                    </div>
+                </div>
+                <center><a href="/SuperUser/ManageDepartment">Go Back</a></center>
+            </div>
+        </div>
+    </div>
+</body>

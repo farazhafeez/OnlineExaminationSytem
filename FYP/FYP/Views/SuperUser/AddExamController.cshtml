@@ -1,0 +1,65 @@
+﻿@model FYP.Models.User
+@{
+    ViewBag.Title = "AddExamController";
+    Layout = "~/Views/Shared/SuperUserLayout.cshtml";
+}
+
+
+<style>
+    .submit-btn {
+        width:100%;
+    }
+</style>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><center><b>Create An Account For Exam Controller</b></center></div>
+                    <div class="panel-body">
+
+                        @using (Html.BeginForm())
+                        {
+                            
+                            @Html.Label("Id" ) 
+                            @Html.TextBoxFor(a => a.User_Id, new { @class="form-control", @placeholder="Example: john.smith@gmail.com"}) 
+                            @Html.ValidationMessageFor(a => a.User_Id)<br> 
+                        
+                            @Html.Label("First Name" ) 
+                            @Html.TextBoxFor(a => a.First_Name, new { @class = "form-control", @placeholder = "Example: John" }) 
+                            @Html.ValidationMessageFor(a => a.First_Name)<br> 
+                                                                             
+                            @Html.Label("Last Name" ) 
+                            @Html.TextBoxFor(a => a.Last_Name, new { @class = "form-control", @placeholder = "Example: Smith" }) 
+                            @Html.ValidationMessageFor(a => a.Last_Name)<br> 
+                                                                             
+                            @Html.Label("Password" ) 
+                            @Html.PasswordFor(a => a.Password, new { @class = "form-control" }) 
+                            @Html.ValidationMessageFor(a => a.Password)<br>
+                            
+                            
+                                                                             
+                            @Html.Label("Contact Number" ) 
+                            @Html.TextBoxFor(a => a.Contact_No, new { @class = "form-control", @placeholder = "Example: 0300*******" }) 
+                            @Html.ValidationMessageFor(a => a.Contact_No)<br> 
+                                                                              
+                            @Html.Label("Status:" )
+                            <center> 
+                            @Html.RadioButtonFor(a => a.Status, "Active", new { @checked = "checked" })
+                            @Html.Label("Active" ) &nbsp;&nbsp;&nbsp;&nbsp;
+                            @Html.RadioButtonFor(a => a.Status, "Inactive") 
+                            @Html.Label("Inactive" )
+                            </center>
+                                                     
+                            <input type="submit" class="btn btn-primary submit-btn" value="Register">
+                        }
+                    </div>
+                </div>
+                <center><a href="/SuperUser/ManageExamController">Go Back</a></center>
+            </div>
+        </div>
+    </div>
+</body>
+

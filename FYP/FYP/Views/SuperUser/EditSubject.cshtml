@@ -1,0 +1,38 @@
+﻿@model FYP.Models.Subject
+@{
+    ViewBag.Title = "EditSubject";
+    Layout = "~/Views/Shared/SuperUserLayout.cshtml";
+}
+
+<style>
+    .submit-btn {
+        width: 100%;
+    }
+</style>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><center><b>Edit @ViewBag.User_Id's Subject</b></center></div>
+                    <div class="panel-body">
+
+                        @using (Html.BeginForm())
+                        {
+
+                            @Html.Label("Enter Subject Name:")
+                            @Html.TextBoxFor(model => model.Subject_Name, new { @class = "form-control", @placeholder = "Example: English" })
+                            @Html.ValidationMessageFor(a => a.Subject_Name)<br>
+
+                            <input type="submit" class="btn btn-primary submit-btn" value="Save Changes"/>
+                        }
+                    </div>
+                </div>
+                <center><a href="/SuperUser/ManageSubject">Go Back</a></center>
+
+            </div>
+        </div>
+    </div>
+</body>

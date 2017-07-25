@@ -1,0 +1,45 @@
+﻿@model FYP.Models.Batch
+@{
+    ViewBag.Title = "AddBatch";
+    Layout = "~/Views/Shared/SuperUserLayout.cshtml";
+}
+
+<style>
+    .submit-btn {
+        width: 100%;
+    }
+</style>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><center><b>Add Batch</b></center></div>
+                    <div class="panel-body">
+
+                        @using (Html.BeginForm())
+                        {
+
+                            @Html.Label("Batch ID")
+                            @Html.TextBoxFor(a => a.Batch_Id, new { @class = "form-control", @placeholder = "Example: F13" })
+                            @Html.ValidationMessageFor(a => a.Batch_Id)<br>
+
+                            @Html.Label("Batch Starting Date")
+                            @Html.TextBoxFor(a => a.Starting_Date, new { @class = "form-control", @placeholder = "Example: 10-10-2013", @type="number" })
+                            @Html.ValidationMessageFor(a => a.Starting_Date)<br>
+                            
+                            @Html.Label("Batch Ending Date")
+                            @Html.TextBoxFor(a => a.Ending_Date, new { @class = "form-control", @placeholder = "Example: 10-10-2013", @type="number" })
+                            @Html.ValidationMessageFor(a => a.Ending_Date)<br>
+
+                            <input type="submit" class="btn btn-primary submit-btn" value="Add">
+                        }
+                    </div>
+                </div>
+                <center><a href="/SuperUser/ManageBatch">Go Back</a></center>
+            </div>
+        </div>
+    </div>
+</body>

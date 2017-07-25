@@ -1,0 +1,100 @@
+﻿@{
+    ViewBag.Title = "ExamSchedule";
+    Layout = "~/Views/Shared/ExamControllerLayout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>CreateExam</title>
+
+    <style>
+        .submit-btn {
+            width: 100%;
+        }
+
+        .multiselect-container {
+            width: 100% !important;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><center><b>Create Exam Schedule</b></center></div>
+                    <div class="panel-body">
+                        <form action="/ExamController/ExamScheduled" method="post">
+                            <label>Select a Exam</label><br>
+                            <select id="exam" name="exam" class="form-control"></select><br>
+
+                            <label>Select a Time</label><br>
+                            <input type="datetime-local" name="time" class="form-control"/><br>
+
+                            <label>Select a Room</label><br>
+                            <select id="room" name="room" class="form-control"></select><br>
+
+                            <input type="submit" class="btn btn-primary submit-btn" value="Create">
+                        </form>
+                    </div>
+                </div>
+                <center><a href="/ExamController/Index">Go Back</a></center>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script type="text/javascript">
+    $(function () {
+        $(document).ready(function () {
+            $.ajax({
+                type: "POST",
+                url: "/ExamController/AjaxMethodForExam",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    len = response.length;
+                    if (len == 0) {
+                        $("#exam").html('<option disabled selected>-There are no Exams in DB-</option>');
+                    }
+                    else {
+                        $("#exam").html('<option disabled selected>-Select a Exam-</option>');
+                        for (var i = 0; i < len; i++) {
+                            $("#exam").append(new Option("Subject Id: " + response[i].Subject_Id + ", Subject Name: " + response[i].Subject_Name + ", Batch: " + response[i].Batch_Id, response[i].Exam_Id));
+                        }
+                    }
+                },
+                error: function (response) {
+                    $("#dep").html('<option disabled selected>-There are no Exams in DB-</option>');
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: "/ExamController/AjaxMethodForRoom",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    len = response.length;
+                    if (len == 0) {
+                        $("#room").html('<option disabled selected>-There are no Rooms in DB-</option>');
+                    }
+                    else {
+                        $("#room").html('<option disabled selected>-Select a Room-</option>');
+                        for (var i = 0; i < len; i++) {
+                            $("#room").append(new Option("Room Number: " + response[i].Room_Id + ", Room Capacity: " + response[i].Room_Capacity, response[i].Room_Id));
+                        }
+                    }
+                },
+                error: function (response) {
+                    $("#dep").html('<option disabled selected>-There are no Rooms in DB-</option>');
+                }
+            });
+        });
+    });
+
+</script>

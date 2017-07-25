@@ -1,0 +1,47 @@
+﻿@model FYP.Models.Subject
+@{
+    ViewBag.Title = "AddSubject";
+    Layout = "~/Views/Shared/SuperUserLayout.cshtml";
+}
+
+<style>
+    .submit-btn {
+        width: 100%;
+    }
+</style>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><center><b>Add a Subject for @ViewBag.User_Id</b></center></div>
+                    <div class="panel-body">
+
+                        @using (Html.BeginForm())
+                        {
+
+                            @Html.Label("Enter Subject Name:") 
+                            @Html.TextBoxFor(a => a.Subject_Name, new { @class = "form-control", @placeholder = "Example: English" }) 
+                            @Html.ValidationMessageFor(a => a.Subject_Name)<br> 
+
+                            @Html.Label("Status:")
+                            <center>
+                                @Html.RadioButtonFor(a => a.Status, "Active", new { @checked = "checked" })
+                                @Html.Label("Active") &nbsp;&nbsp;&nbsp;&nbsp;
+                                @Html.RadioButtonFor(a => a.Status, "Inactive")
+                                @Html.Label("Inactive")
+                            </center>
+
+
+                            <input type="submit" class="btn btn-primary submit-btn" value="Add" onclick="location.href='@Url.Action("AddSubject", "SuperUser", new {User_Id = @ViewBag.User_Id }, null)'" />
+                        }
+                    </div>
+                </div>
+                <center><a href="/SuperUser/ManageSubject">Go Back</a></center>
+            </div>
+        </div>
+    </div>
+</body>
+                                            

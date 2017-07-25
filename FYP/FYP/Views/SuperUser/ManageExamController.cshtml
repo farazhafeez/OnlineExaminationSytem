@@ -1,0 +1,76 @@
+﻿@{
+    ViewBag.Title = "ManageExamController";
+    Layout = "~/Views/Shared/SuperUserLayout.cshtml";
+}
+
+<style>
+    hr {
+        border: 1px solid #3CCAE6;
+    }
+
+    a.my_class {
+        color: white;
+    }
+</style>
+<body>
+    <div class="container"  style="border: none; padding: 0px; border-radius: 4px;">
+        <h3><b>Manage Exam Controller</b></h3>
+        <hr>
+
+        <button type="button" class="btn btn-primary" style="width:100%;" onclick="location.href='@Url.Action("AddExamController", "SuperUser",null)'"><span class="glyphicon glyphicon-plus-sign"></span> Add Exam Controller</button>
+
+        <div class="container" style="border: 1px solid silver; padding: 0px; border-radius: 4px;">
+            <div class="container-fluid" style="background-color: #F4F4F4; padding: 12px; border-radius: 4px;"><span class="glyphicon glyphicon-edit"></span> Exam Controllers List</div>
+            <br>
+            <div class="container table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Exam Controller's ID</th>
+                            <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Exam Controller's Name</th>
+                            <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Contact No</th>
+                            <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Status</th>
+                            <th style="height: 30px; width: 800px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Action</th>
+                        </tr>
+                    </thead>
+                    @foreach (var s in Model)
+                    {
+                        <tr>
+                            <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.User_Id</b></td>
+                            <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.First_Name @s.Last_Name</b></td>
+                            <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.Contact_No</b></td>
+                            @if (s.Status == "Inactive")
+                            {
+                                <td style="height: 40px; width: 600px; text-align: center; font-size: 13px; color: red;">&nbsp;&nbsp;<b>@s.Status</b></td>
+                            }
+                            else if (s.Status == "Active")
+                            {
+                                <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.Status</b></td>
+                            }
+                            <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">
+
+                                <button type="button" class="btn btn-success" onclick="location.href='@Url.Action("EditExamController","SuperUser", new {User_Id=@s.User_Id ,},null)'">
+                                    <span class="glyphicon glyphicon-cog"></span> Edit
+                                </button>
+
+
+                                @if (s.Status == "Active")
+                                {
+                                    <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("DisableUser","SuperUser", new {User_Id=@s.User_Id},null)'">
+                                        <span class="glyphicon glyphicon-ban-circle"></span> Disable
+                                    </button>
+                                }
+                                else if (s.Status == "Inactive")
+                                {
+                                    <button type="button" class="btn btn-success" onclick="location.href='@Url.Action("EnableUser","SuperUser", new {User_Id=@s.User_Id},null)'">
+                                        <span class="glyphicon glyphicon-ok-circle"></span> Enable
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</body>

@@ -20,7 +20,8 @@ namespace FYP.Models
             this.Questions = new HashSet<Question>();
         }
     
-        public int Subject_Id { get; set; }
+        public string Subject_Id { get; set; }
+        public string Section { get; set; }
         public string Subject_Name { get; set; }
         public string User_Id { get; set; }
         public string Batch_Id { get; set; }

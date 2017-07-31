@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using FYP.Models;
+using System.Data.Entity;
 
 namespace FYP.Controllers
 {
@@ -21,7 +22,8 @@ namespace FYP.Controllers
 
         public ActionResult ManageExam()
         {
-            return View();
+            var exams = obj.Exams.Include(a=>a.Schedules).Where(x => x.Status != "Conducted");
+            return View(exams);
         }
 
         public ActionResult CreateExam()
@@ -50,7 +52,7 @@ namespace FYP.Controllers
             List<Enrolled> enrollmentList = new List<Enrolled>();
             foreach (var i in subjects)
             {
-                s = obj.Subjects.First(x => x.Subject_Id == i);
+                s = obj.Subjects.First(x => x.Subject_Id.Equals(i));
                 b = obj.Batches.First(x => x.Batch_Id == s.Batch_Id);
 
                 e.Subject_Id = s.Subject_Id;
@@ -88,9 +90,19 @@ namespace FYP.Controllers
             return View();
         }
 
-        public ActionResult ExamSchedule()
+        public ActionResult ExamSchedule(int Exam_Id)
         {
-            return View();
+            ViewBag.Exam_Id = Exam_Id;    
+            try
+            {
+                var schedule = obj.Schedules.First(x => x.Exam_Id == Exam_Id);
+                return View(schedule);
+            }
+            catch
+            {
+                Schedule schedule = new Schedule();
+                return View(schedule);
+            }
         }
 
         [HttpPost]
@@ -157,7 +169,7 @@ namespace FYP.Controllers
         }
 
         [HttpPost]
-        public JsonResult AjaxMethodForExam()
+        public JsonResult AjaxMethodForExamSchedule()
         {
             try
             {
@@ -184,5 +196,19 @@ namespace FYP.Controllers
                 return Json(null);
             }
         }
+
+        //[HttpPost]
+        //public JsonResult AjaxMethodForManageExam()
+        //{
+        //    try
+        //    {
+        //        var exams = obj.Exams.ToList();
+        //        return Json(exams.Select(x => new {x.Exam_Id, x.Total_Marks, x.Subject.Subject_Name, x.Batch_Id, x.Department_Id, x.Exam_Session, x.Status}));
+        //    }
+        //    catch
+        //    {
+        //        return Json(null);
+        //    }
+        //}
     }
 }

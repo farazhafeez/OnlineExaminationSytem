@@ -28,7 +28,6 @@ namespace FYP.Models
         public DbSet<Attempt_Log> Attempt_Log { get; set; }
         public DbSet<Batch> Batches { get; set; }
         public DbSet<Department> Departments { get; set; }
-        public DbSet<Drop_Out> Drop_Out { get; set; }
         public DbSet<Enrolled> Enrolleds { get; set; }
         public DbSet<Exam> Exams { get; set; }
         public DbSet<Option> Options { get; set; }

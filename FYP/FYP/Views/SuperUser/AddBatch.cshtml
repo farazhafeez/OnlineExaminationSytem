@@ -27,14 +27,14 @@
                             @Html.ValidationMessageFor(a => a.Batch_Id)<br>
 
                             @Html.Label("Batch Starting Date")
-                            @Html.TextBoxFor(a => a.Starting_Date, new { @class = "form-control", @placeholder = "Example: 10-10-2013", @type="number" })
+                            @Html.TextBoxFor(a => a.Starting_Date, new { @class = "form-control", @placeholder = "Example: 10-10-2013", @type="date" })
                             @Html.ValidationMessageFor(a => a.Starting_Date)<br>
-                            
-                            @Html.Label("Batch Ending Date")
-                            @Html.TextBoxFor(a => a.Ending_Date, new { @class = "form-control", @placeholder = "Example: 10-10-2013", @type="number" })
-                            @Html.ValidationMessageFor(a => a.Ending_Date)<br>
 
-                            <input type="submit" class="btn btn-primary submit-btn" value="Add">
+                            @Html.Label("Department")<br>
+                            @Html.DropDownListFor(a => a.Department_Id, Enumerable.Empty<SelectListItem>(),"-- Select a Department --", new { @class = "form-control", @id="dep"})<br><br>
+
+
+                            <input type="submit" id="submit" class="btn btn-primary submit-btn" value="Add" >
                         }
                     </div>
                 </div>
@@ -43,3 +43,31 @@
         </div>
     </div>
 </body>
+
+<script>
+    $(function () {
+        $(document).ready(function () {
+            $.ajax({
+                type: "POST",
+                url: "/SuperUser/AjaxMethodForDepartment",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    len = response.length;
+                    if (len == 0) {
+                        $("#dep").html('<option disabled selected>-There are no Departments in DB-</option>');
+                    }
+                    else {
+                        $("#dep").html('<option disabled selected>-Select a Department-</option>');
+                        for (var i = 0; i < len; i++) {
+                            $("#dep").append(new Option(response[i].Department_Id));
+                        }
+                    }
+                },
+                error: function (response) {
+                    $("#dep").html('<option disabled selected>-There are no Departments in DB-</option>');
+                }
+            });
+        });
+    });
+</script>

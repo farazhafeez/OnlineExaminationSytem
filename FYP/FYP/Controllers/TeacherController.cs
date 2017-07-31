@@ -52,7 +52,7 @@ namespace FYP.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult Add_MCQ(FormCollection fc,int id)
+        public ActionResult Add_MCQ(FormCollection fc,string id)
         {
             Option opt = new Option();
             Question qtn = new Question();

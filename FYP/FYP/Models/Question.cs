@@ -23,8 +23,9 @@ namespace FYP.Models
     
         public int Question_Id { get; set; }
         public string Questions { get; set; }
-        public Nullable<int> Subject_Id { get; set; }
         public string Type { get; set; }
+        public string Subject_Id { get; set; }
+        public string Section { get; set; }
     
         public virtual ICollection<Attempt_Log> Attempt_Log { get; set; }
         public virtual ICollection<Option> Options { get; set; }

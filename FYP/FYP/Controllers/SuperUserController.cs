@@ -265,21 +265,23 @@ namespace FYP.Controllers
 
 
         //Subjects
-        public ActionResult ManageSubject(string User_Id)
+        public ActionResult ManageSubject(/*changed*//*string User_Id*/)
         {
-            try
-            {
-                var u = obj.Subjects.Where(a => a.User_Id.Equals(User_Id));
-                User un = obj.Users.First(a => a.User_Id.Equals(User_Id));
-                ViewBag.User_Name = un.First_Name +" "+ un.Last_Name;
-                ViewBag.User_Id = User_Id;
+            return View(obj.Subjects.ToList());
+            //changed            
+            //try
+            //{
+            //    var u = obj.Subjects.Where(a => a.User_Id.Equals(User_Id));
+            //    User un = obj.Users.First(a => a.User_Id.Equals(User_Id));
+            //    ViewBag.User_Name = un.First_Name +" "+ un.Last_Name;
+            //    ViewBag.User_Id = User_Id;
 
-                return View(u);
-            }
-            catch
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            //    return View(u);
+            //}
+            //catch
+            //{
+            //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            //}
         }
 
         public ActionResult AddSubject(string User_Id)
@@ -425,6 +427,7 @@ namespace FYP.Controllers
         public ActionResult AddBatch(Batch batch)
         {
             Batch b = new Batch();
+            batch.Status = "Active";
             b = batch;
             obj.Batches.Add(b);
             obj.SaveChanges();
@@ -442,7 +445,7 @@ namespace FYP.Controllers
         //Activate or Deactivate Subject
         public ActionResult EnableSubject(int? Subject_Id, string User_Id)
         {
-            Subject s = obj.Subjects.First(a =>a.Subject_Id == Subject_Id);
+            Subject s = obj.Subjects.First(a =>a.Subject_Id.Equals(Subject_Id));
             s.Status = "Active";
             obj.SaveChanges();
             return RedirectToAction("ManageSubject", new { User_Id = User_Id });
@@ -450,7 +453,7 @@ namespace FYP.Controllers
 
         public ActionResult DisableSubject(int? Subject_Id, string User_Id)
         {
-            Subject s = obj.Subjects.First(a =>a.Subject_Id == Subject_Id);
+            Subject s = obj.Subjects.First(a =>a.Subject_Id.Equals(Subject_Id));
             s.Status = "Inactive";
             obj.SaveChanges();
             return RedirectToAction("ManageSubject", new { User_Id = User_Id });
@@ -469,6 +472,20 @@ namespace FYP.Controllers
         public JsonResult IsUser_IdAvailable(string User_Id)
         {
             return Json(!obj.Users.Any(a => a.User_Id.Equals(User_Id)), JsonRequestBehavior.AllowGet);
+        }
+
+
+        public JsonResult AjaxMethodForDepartment()
+        {
+            try
+            {
+                var dep = obj.Departments.ToList();
+                return Json(dep.Select(x => new {x.Department_Id }));
+            }
+            catch
+            {
+                return Json(null);
+            }
         }
 
     }

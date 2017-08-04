@@ -26,13 +26,17 @@
                             @Html.TextBoxFor(a => a.Batch_Id, new { @class = "form-control", @placeholder = "Example: F13" })
                             @Html.ValidationMessageFor(a => a.Batch_Id)<br>
 
-                            @Html.Label("Batch Starting Date")
-                            @Html.TextBoxFor(a => a.Starting_Date, new { @class = "form-control", @placeholder = "Example: 10-10-2013", @type="date" })
-                            @Html.ValidationMessageFor(a => a.Starting_Date)<br>
+                            @Html.Label("Batch Starting Year")
+                            @Html.TextBoxFor(a => a.Starting_Year, new { @class = "form-control", @placeholder = "Example: 2013", @type="number" })
+                            @Html.ValidationMessageFor(a => a.Starting_Year)<br>
+
+                            @Html.Label("Batch Ending Year")
+                            @Html.TextBoxFor(a => a.Ending_Year, new { @class = "form-control", @placeholder = "Example: 2017", @type = "number" })
+                            @Html.ValidationMessageFor(a => a.Ending_Year)<br>
 
                             @Html.Label("Department")<br>
                             @Html.DropDownListFor(a => a.Department_Id, Enumerable.Empty<SelectListItem>(),"-- Select a Department --", new { @class = "form-control", @id="dep"})<br><br>
-
+                            @Html.ValidationMessageFor(a => a.Department_Id)<br>
 
                             <input type="submit" id="submit" class="btn btn-primary submit-btn" value="Add" >
                         }

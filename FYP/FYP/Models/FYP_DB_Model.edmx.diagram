@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="4b41d2f42c8544a784f70b673ffd1fee" Name="Diagram1" ZoomLevel="97">
+      <Diagram DiagramId="0fc36a2c58a44667972de0f8de809619" Name="Diagram1">
         <EntityTypeShape EntityType="FYP_DB_Model.Attempt_Log" Width="1.5" PointX="15.75" PointY="9.5" IsExpanded="true" />
         <EntityTypeShape EntityType="FYP_DB_Model.Batch" Width="1.5" PointX="3" PointY="10.25" IsExpanded="true" />
         <EntityTypeShape EntityType="FYP_DB_Model.Department" Width="1.5" PointX="0.75" PointY="10.75" IsExpanded="true" />

@@ -21,8 +21,8 @@
             <PropertyRef Name="Batch_Id" />
           </Key>
           <Property Name="Batch_Id" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="Starting_Date" Type="nvarchar" MaxLength="255" />
-          <Property Name="Ending_Date" Type="nvarchar" MaxLength="255" />
+          <Property Name="Starting_Year" Type="nvarchar" MaxLength="255" />
+          <Property Name="Ending_Year" Type="nvarchar" MaxLength="255" />
           <Property Name="Department_Id" Type="nvarchar" MaxLength="255" />
           <Property Name="Status" Type="nvarchar" MaxLength="255" />
         </EntityType>
@@ -515,8 +515,8 @@
             <PropertyRef Name="Batch_Id" />
           </Key>
           <Property Name="Batch_Id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Starting_Date" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Ending_Date" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Starting_Year" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Ending_Year" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Department_Id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Department" Relationship="Self.Batch_DepartmentBatch" FromRole="Batch" ToRole="Department" />
@@ -1044,8 +1044,8 @@
             <EntityTypeMapping TypeName="FYP_DB_Model.Batch">
               <MappingFragment StoreEntitySet="Batch">
                 <ScalarProperty Name="Batch_Id" ColumnName="Batch_Id" />
-                <ScalarProperty Name="Starting_Date" ColumnName="Starting_Date" />
-                <ScalarProperty Name="Ending_Date" ColumnName="Ending_Date" />
+                <ScalarProperty Name="Starting_Year" ColumnName="Starting_Year" />
+                <ScalarProperty Name="Ending_Year" ColumnName="Ending_Year" />
                 <ScalarProperty Name="Department_Id" ColumnName="Department_Id" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
               </MappingFragment>

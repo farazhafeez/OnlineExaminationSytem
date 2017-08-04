@@ -11,7 +11,9 @@ namespace FYP.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.Web.Mvc;
+
     public partial class Department
     {
         public Department()
@@ -20,7 +22,7 @@ namespace FYP.Models
             this.Exams = new HashSet<Exam>();
             this.Users = new HashSet<User>();
         }
-    
+        
         public string Department_Id { get; set; }
     
         public virtual ICollection<Batch> Batches { get; set; }

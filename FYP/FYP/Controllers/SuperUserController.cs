@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using FYP.Models;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 
 namespace FYP.Controllers
 {
@@ -23,15 +24,15 @@ namespace FYP.Controllers
             return View();
         }
 
-        
 
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
+
         //Teacher Accounts
         public ActionResult ManageTeacher()
         {
@@ -48,24 +49,24 @@ namespace FYP.Controllers
 
         public ActionResult AddTeacher()
         {
-            
+
             return View();
         }
         [HttpPost]
-        public ActionResult AddTeacher(User us)
+        public ActionResult AddTeacher(string User_Id , string First_Name, string Last_Name, string Password, string Contact_No, string Status)
         {
-                User u = new User();
-                u.User_Id = us.User_Id;
-                u.First_Name = us.First_Name;
-                u.Last_Name = us.Last_Name;
-                u.Password = us.Password;
-                u.Contact_No = us.Contact_No;
-                u.Status = us.Status;
-                u.Role = "Teacher";
+            User u = new User();
+            u.User_Id = User_Id;
+            u.First_Name = First_Name;
+            u.Last_Name = Last_Name;
+            u.Password = Password;
+            u.Contact_No = Contact_No;
+            u.Status = Status;
+            u.Role = "Teacher";
 
-                obj.Users.Add(u);
-                obj.SaveChanges();
-                return RedirectToAction("ManageTeacher","SuperUser");
+            obj.Users.Add(u);
+            obj.SaveChanges();
+            return RedirectToAction("ManageTeacher", "SuperUser");
         }
 
         public ActionResult EditTeacher(String User_Id)
@@ -90,8 +91,8 @@ namespace FYP.Controllers
             var UserToUpdate = obj.Users.Find(User_Id);
             if (TryUpdateModel(UserToUpdate, "", new string[] { "User_Id", "Password", "First_Name", "Last_Name", "Contact_No", "Role" }))
             {
-                    obj.SaveChanges();
-                    return RedirectToAction("ManageTeacher","SuperUser");
+                obj.SaveChanges();
+                return RedirectToAction("ManageTeacher", "SuperUser");
             }
             return View(UserToUpdate);
         }
@@ -109,7 +110,7 @@ namespace FYP.Controllers
         public ActionResult ManageStudent()
         {
             try
-            {   
+            {
                 var u = obj.Users.Where(a => a.Role.Equals("Student"));
 
                 return View(u);
@@ -125,7 +126,7 @@ namespace FYP.Controllers
             List<SelectListItem> dl = obj.Departments.AsEnumerable().Select(a => new SelectListItem { Text = a.Department_Id, Value = a.Department_Id }).ToList();
             ViewBag.d = dl;
 
-            List<SelectListItem> sl = obj.Batches.AsEnumerable().Select(a => new SelectListItem { Text = a.Batch_Id, Value = a.Batch_Id}).ToList();
+            List<SelectListItem> sl = obj.Batches.AsEnumerable().Select(a => new SelectListItem { Text = a.Batch_Id, Value = a.Batch_Id }).ToList();
             ViewBag.s = sl;
             ViewBag.dept = obj.Departments.ToList();
             return View();
@@ -174,8 +175,8 @@ namespace FYP.Controllers
             var UserToUpdate = obj.Users.Find(User_Id);
             if (TryUpdateModel(UserToUpdate, "", new string[] { "User_Id", "Password", "First_Name", "Last_Name", "Contact_No", "Role", "Batch_Id", "Department_Id" }))
             {
-                    obj.SaveChanges();
-                    return RedirectToAction("ManageStudent", "SuperUser");
+                obj.SaveChanges();
+                return RedirectToAction("ManageStudent", "SuperUser");
             }
             return View(UserToUpdate);
         }
@@ -212,20 +213,20 @@ namespace FYP.Controllers
         [HttpPost]
         public ActionResult AddExamController(User us)
         {
-            
-                User u = new User();
-                u.User_Id = us.User_Id;
-                u.First_Name = us.First_Name;
-                u.Last_Name = us.Last_Name;
-                u.Password = us.Password;
-                u.Contact_No = us.Contact_No;
-                u.Status = us.Status;
-                u.Role = "Exam_Controller";
 
-                obj.Users.Add(u);
-                obj.SaveChanges();
-                return RedirectToAction("ManageExamController", "SuperUser");
-            
+            User u = new User();
+            u.User_Id = us.User_Id;
+            u.First_Name = us.First_Name;
+            u.Last_Name = us.Last_Name;
+            u.Password = us.Password;
+            u.Contact_No = us.Contact_No;
+            u.Status = us.Status;
+            u.Role = "Exam_Controller";
+
+            obj.Users.Add(u);
+            obj.SaveChanges();
+            return RedirectToAction("ManageExamController", "SuperUser");
+
         }
 
         public ActionResult EditExamController(String User_Id)
@@ -233,7 +234,7 @@ namespace FYP.Controllers
 
             User u = obj.Users.Find(User_Id);
             List<SelectListItem> l = new List<SelectListItem>();
-            l.Add(new SelectListItem { Text = "Exam Controller", Value = "Exam_Controller",Selected=true });
+            l.Add(new SelectListItem { Text = "Exam Controller", Value = "Exam_Controller", Selected = true });
             l.Add(new SelectListItem { Text = "Teacher", Value = "Teacher" });
             l.Add(new SelectListItem { Text = "Student", Value = "Student" });
 
@@ -246,14 +247,14 @@ namespace FYP.Controllers
         public ActionResult EditExamControllerPost(string User_Id)
         {
             var UserToUpdate = obj.Users.Find(User_Id);
-            if (TryUpdateModel(UserToUpdate, "", new string[] { "Password", "First_Name", "Last_Name", "Contact_No", "Role"}))
+            if (TryUpdateModel(UserToUpdate, "", new string[] { "Password", "First_Name", "Last_Name", "Contact_No", "Role" }))
             {
                 obj.SaveChanges();
                 return RedirectToAction("ManageExamController", "SuperUser");
             }
             return View(UserToUpdate);
         }
-        
+
 
 
 
@@ -291,7 +292,7 @@ namespace FYP.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddSubject(Subject sub,string User_Id)
+        public ActionResult AddSubject(Subject sub, string User_Id)
         {
             Subject s = new Subject();
             s.Subject_Name = sub.Subject_Name;
@@ -300,12 +301,12 @@ namespace FYP.Controllers
 
             obj.Subjects.Add(s);
             obj.SaveChanges();
-            return RedirectToAction("ManageSubject", new {User_Id = User_Id });
+            return RedirectToAction("ManageSubject", new { User_Id = User_Id });
         }
 
         public ActionResult EditSubject(int? Subject_Id, string User_Id)
         {
-           
+
             Subject s = obj.Subjects.Find(Subject_Id);
             return View(s);
         }
@@ -313,17 +314,17 @@ namespace FYP.Controllers
         [HttpPost, ActionName("EditSubject")]
         public ActionResult EditSubjectPost(int? Subject_Id, string User_Id)
         {
-            
+
             var SubjectToUpdate = obj.Subjects.Find(Subject_Id);
             if (TryUpdateModel(SubjectToUpdate, "", new string[] { "Subject_Name" }))
             {
-                    obj.SaveChanges();
-                    return RedirectToAction("ManageSubject", new {User_Id = User_Id });
+                obj.SaveChanges();
+                return RedirectToAction("ManageSubject", new { User_Id = User_Id });
             }
             return View(SubjectToUpdate);
         }
 
-        
+
 
 
 
@@ -336,14 +337,14 @@ namespace FYP.Controllers
         //Activate or Deactivate Users
         public ActionResult EnableUser(string User_Id)
         {
-            User u  =   obj.Users.First(a => a.User_Id.Equals(User_Id));
+            User u = obj.Users.First(a => a.User_Id.Equals(User_Id));
             u.Status = "Active";
             obj.SaveChanges();
             if (u.Role.Equals("Teacher"))
             {
                 return RedirectToAction("ManageTeacher", "SuperUser");
             }
-            else if(u.Role.Equals("Student"))
+            else if (u.Role.Equals("Student"))
             {
                 return RedirectToAction("ManageStudent", "SuperUser");
             }
@@ -394,10 +395,10 @@ namespace FYP.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult AddDepartment(Department dept)
+        public ActionResult AddDepartment(string Department_Id)
         {
             Department d = new Department();
-            d = dept;
+            d.Department_Id = Department_Id;
             obj.Departments.Add(d);
             obj.SaveChanges();
             return RedirectToAction("ManageDepartment", "SuperUser");
@@ -445,7 +446,7 @@ namespace FYP.Controllers
         //Activate or Deactivate Subject
         public ActionResult EnableSubject(int? Subject_Id, string User_Id)
         {
-            Subject s = obj.Subjects.First(a =>a.Subject_Id.Equals(Subject_Id));
+            Subject s = obj.Subjects.First(a => a.Subject_Id.Equals(Subject_Id));
             s.Status = "Active";
             obj.SaveChanges();
             return RedirectToAction("ManageSubject", new { User_Id = User_Id });
@@ -453,7 +454,7 @@ namespace FYP.Controllers
 
         public ActionResult DisableSubject(int? Subject_Id, string User_Id)
         {
-            Subject s = obj.Subjects.First(a =>a.Subject_Id.Equals(Subject_Id));
+            Subject s = obj.Subjects.First(a => a.Subject_Id.Equals(Subject_Id));
             s.Status = "Inactive";
             obj.SaveChanges();
             return RedirectToAction("ManageSubject", new { User_Id = User_Id });
@@ -461,31 +462,41 @@ namespace FYP.Controllers
 
 
 
-
-
-
-
-
-
-
-        //Custom validation for user id
-        public JsonResult IsUser_IdAvailable(string User_Id)
-        {
-            return Json(!obj.Users.Any(a => a.User_Id.Equals(User_Id)), JsonRequestBehavior.AllowGet);
-        }
-
-
+        [HttpPost]
         public JsonResult AjaxMethodForDepartment()
         {
             try
             {
                 var dep = obj.Departments.ToList();
-                return Json(dep.Select(x => new {x.Department_Id }));
+                return Json(dep.Select(x => new { x.Department_Id }));
             }
             catch
             {
                 return Json(null);
             }
+        }
+
+
+
+
+
+
+
+        //RemoteValidations
+        [HttpPost]
+        public JsonResult IsUser_IdAvailable(string User_Id)
+        {
+            return Json(!obj.Users.Any(a => a.User_Id.Equals(User_Id)));
+        }
+        [HttpPost]
+        public JsonResult IsDepartment_IdAvailable(string Department_Id)
+        {
+            return Json(!obj.Departments.Any(a => a.Department_Id.Equals(Department_Id)));
+        }
+        [HttpPost]
+        public JsonResult IsBatch_IdAvailable(string Batch_Id)
+        {
+            return Json(!obj.Batches.Any(a => a.Batch_Id.Equals(Batch_Id)));
         }
 
     }

@@ -11,7 +11,9 @@ namespace FYP.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.Web.Mvc;
+
     public partial class Batch
     {
         public Batch()
@@ -20,10 +22,10 @@ namespace FYP.Models
             this.Subjects = new HashSet<Subject>();
             this.Users = new HashSet<User>();
         }
-    
+        
         public string Batch_Id { get; set; }
-        public string Starting_Date { get; set; }
-        public string Ending_Date { get; set; }
+        public string Starting_Year { get; set; }
+        public string Ending_Year { get; set; }
         public string Department_Id { get; set; }
         public string Status { get; set; }
     

@@ -22,32 +22,32 @@
                         {
 
                             @Html.Label("Id")
-                            @Html.TextBoxFor(a => a.User_Id, new { @class = "form-control", @placeholder = "Example: john.smith@gmail.com" })
-                            @Html.ValidationMessageFor(a => a.User_Id)<br>
+                            @Html.TextBox("User_Id","", new { @class = "form-control", @placeholder = "Example: john.smith@gmail.com" })
+                            @Html.ValidationMessage("User_Id")<br>
 
                             @Html.Label("First Name")
-                            @Html.TextBoxFor(a => a.First_Name, new { @class = "form-control", @placeholder = "Example: John" })
-                            @Html.ValidationMessageFor(a => a.First_Name)<br>
+                            @Html.TextBox("First_Name", "", new { @class = "form-control", @placeholder = "Example: John" })
+                            @Html.ValidationMessage("First_Name")<br>
 
                             @Html.Label("Last Name")
-                            @Html.TextBoxFor(a => a.Last_Name, new { @class = "form-control", @placeholder = "Example: Smith" })
-                            @Html.ValidationMessageFor(a => a.Last_Name)<br>
+                            @Html.TextBox("Last_Name", "", new { @class = "form-control", @placeholder = "Example: Smith" })
+                            @Html.ValidationMessage("Last_Name")<br>
 
                             @Html.Label("Password")
-                            @Html.PasswordFor(a => a.Password, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(a => a.Password)<br>
+                            @Html.Password("Password", "", new { @class = "form-control" })
+                            @Html.ValidationMessage("Password")<br>
 
 
 
                             @Html.Label("Contact Number")
-                            @Html.TextBoxFor(a => a.Contact_No, new { @class = "form-control", @placeholder = "Example: 0300*******" })
-                            @Html.ValidationMessageFor(a => a.Contact_No)<br>
+                            @Html.TextBox("Contact_No", "", new { @class = "form-control", @placeholder = "Example: 0300*******" })
+                            @Html.ValidationMessage("Contact_No")<br>
 
                             @Html.Label("Status:")
                             <center>
-                                @Html.RadioButtonFor(a => a.Status, "Active", new { @checked = "checked" })
+                                @Html.RadioButton("Status", "Active", new { @checked = "checked" })
                                 @Html.Label("Active") &nbsp;&nbsp;&nbsp;&nbsp;
-                                @Html.RadioButtonFor(a => a.Status, "Inactive")
+                                @Html.RadioButton("Status", "Inactive")
                                 @Html.Label("Inactive")
                             </center>
 

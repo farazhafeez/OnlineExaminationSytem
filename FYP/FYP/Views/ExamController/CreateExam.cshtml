@@ -85,9 +85,10 @@
                 success: function (response) {
                     len = response.length;
                     if (len == 0) {
-                        $("#dep").html('<option disabled selected>-There are no Departments in DB-</option>');
-                        $("#batch").html('<option disabled selected>-No Department Selected-</option>');
-                        $("#dep,#batch").multiselect('rebuild');
+                        $("#dep").html('<option disabled selected>--There are no Departments in DB--</option>');
+                        $("#batch").html('<option disabled selected>--No Department Selected--</option>');
+                        $("#subject").html('<option disabled selected>--No Batch Selected--</option>');
+                        $("#dep,#batch,#subject").multiselect('rebuild');
                     }
                     else {
                         for (var i = 0; i < len; i++) {
@@ -100,9 +101,10 @@
                     }
                 },
                 error: function (response) {
-                    $("#dep").html('<option disabled selected>-There are no record of Departments in DB-</option>');
-                    $("#batch").html('<option disabled selected>-No Department Selected-</option>');
-                    $("#dep,#batch").multiselect('rebuild');
+                    $("#dep").html('<option disabled selected>--There are no Departments in DB--</option>');
+                    $("#batch").html('<option disabled selected>--No Department Selected--</option>');
+                    $("#subject").html('<option disabled selected>--No Batch Selected--</option>');
+                    $("#dep,#batch,#subject").multiselect('rebuild');
                 }
             });
         });
@@ -158,9 +160,9 @@
                     else {
                         for (var i = 0; i < len; i++) {
                             if (i == 0)
-                                $("#subject").html(new Option("Subject Id: " + response[i].Subject_Id + ", Subject Name: " + response[i].Subject_Name , response[i].Subject_Id));
+                                $("#subject").html(new Option("Subject Id: " + response[i].Subject_Id + ", Subject Name: " + response[i].Subject_Name + ", Batch: " + response[i].Batch_Id + ", Section: " + response[i].Section, response[i].Subject_Id));
                             else
-                                $("#subject").append(new Option("Subject Id: " +response[i].Subject_Id + ", Subject Name: " + response[i].Subject_Name , response[i].Subject_Id));
+                                $("#subject").append(new Option("Subject Id: " + response[i].Subject_Id + ", Subject Name: " + response[i].Subject_Name + ", Batch: " + response[i].Batch_Id + ", Section: " + response[i].Section, response[i].Subject_Id));
                         }
                         $("#subject").multiselect('rebuild');
                     }

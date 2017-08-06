@@ -32,11 +32,11 @@ namespace FYP.Controllers
         }
 
         [HttpPost]
-        public ActionResult ExamCreated(int[] subjects , string examTerm , string examSession)
+        public ActionResult ExamCreated(string[] subjects , string examTerm , string examSession)
         {
-            Subject s = new Subject();
-            Exam e = new Exam();
-            Batch b = new Batch();
+            Subject subject = new Subject();
+            Exam exam = new Exam();
+            Batch batch = new Batch();
             int marks=0;
 
             if (examTerm.Equals("Mid"))
@@ -48,30 +48,31 @@ namespace FYP.Controllers
                 marks = 50;
             }
 
-            var u = obj.Users.Where(x => x.Role.Equals("Student"));
+            var students = obj.Users.Where(x => x.Role.Equals("Student"));
             List<Enrolled> enrollmentList = new List<Enrolled>();
+
             foreach (var i in subjects)
             {
-                s = obj.Subjects.First(x => x.Subject_Id.Equals(i));
-                b = obj.Batches.First(x => x.Batch_Id == s.Batch_Id);
+                subject = obj.Subjects.First(x => x.Subject_Id.Equals(i));
+                batch = obj.Batches.First(x => x.Batch_Id.Equals( subject.Batch_Id ));
 
-                e.Subject_Id = s.Subject_Id;
-                e.Batch_Id = s.Batch_Id;
-                e.Department_Id = b.Department_Id;
-                e.Total_Marks = marks;
-                e.Exam_Session = examSession;
-                e.Status = "Inactive";
-                obj.Exams.Add(e);
+                exam.Subject_Id = subject.Subject_Id;
+                exam.Batch_Id = subject.Batch_Id;
+                exam.Department_Id = batch.Department_Id;
+                exam.Total_Marks = marks;
+                exam.Exam_Session = examSession;
+                exam.Status = "Inactive";
+                obj.Exams.Add(exam);
                 obj.SaveChanges();
 
 
-                foreach (var j in u)
+                foreach (var j in students)
                 {
                     Enrolled enrollment = new Enrolled();
-                    if (j.Batch_Id == b.Batch_Id)
+                    if (j.Batch_Id == batch.Batch_Id && subject.Section.Contains(j.Section))
                     {
                         enrollment.User_Id = j.User_Id;
-                        enrollment.Exam_Id = e.Exam_Id;
+                        enrollment.Exam_Id = exam.Exam_Id;
 
                         enrollmentList.Add(enrollment);
                     }
@@ -142,7 +143,7 @@ namespace FYP.Controllers
             //IEnumerable<Batch> batchList = Enumerable.Empty<Batch>();
             try
             {
-                var b = departments.SelectMany(d => obj.Batches.Where(x => x.Department_Id == d));
+                var b = departments.SelectMany(d => obj.Batches.Where(x => x.Department_Id == d && x.Status.Equals("Active")));
                 var batchList = b.Select(x => x.Batch_Id);
                 return Json(batchList);
             }
@@ -155,11 +156,11 @@ namespace FYP.Controllers
         [HttpPost]
         public JsonResult AjaxMethodForSubject(string[] batches)
         {
-            //IEnumerable<Subject> subjectList = Enumerable.Empty<Subject>();
+            
             try
             {
-                var s = batches.SelectMany(d => obj.Subjects.Where(x => x.Batch_Id == d));
-                var subjectList = s.Select(x => new{ x.Subject_Id , x.Subject_Name});
+                var subjects = batches.SelectMany(d => obj.Subjects.Where(x => x.Batch_Id == d));
+                var subjectList = subjects.Select(x => new{ x.Subject_Id , x.Subject_Name , x.Section , x.Batch_Id});
                 return Json(subjectList);
             }
             catch

@@ -1,14 +1,8 @@
-﻿@model FYP.Models.Batch
+﻿
 @{
     ViewBag.Title = "AddBatch";
     Layout = "~/Views/Shared/SuperUserLayout.cshtml";
 }
-
-<style>
-    .submit-btn {
-        width: 100%;
-    }
-</style>
 
 <body>
 
@@ -19,27 +13,23 @@
                     <div class="panel-heading"><center><b>Add Batch</b></center></div>
                     <div class="panel-body">
 
-                        @using (Html.BeginForm())
-                        {
+                        <form action="/SuperUser/AddBatch" method="post">
 
-                            @Html.Label("Batch ID")
-                            @Html.TextBoxFor(a => a.Batch_Id, new { @class = "form-control", @placeholder = "Example: F13" })
-                            @Html.ValidationMessageFor(a => a.Batch_Id)<br>
+                            <label>Batch ID</label>
+                            <input type="text" name="Batch_Id" id="Batch_Id" class="form-control" placeholder="Example: bscs-f13"/><br>
 
-                            @Html.Label("Batch Starting Year")
-                            @Html.TextBoxFor(a => a.Starting_Year, new { @class = "form-control", @placeholder = "Example: 2013", @type="number" })
-                            @Html.ValidationMessageFor(a => a.Starting_Year)<br>
+                            <label>Batch Starting Year</label>
+                            <input type="number" name="Starting_Year" class="form-control" placeholder="Example: 2013" /><br>
 
-                            @Html.Label("Batch Ending Year")
-                            @Html.TextBoxFor(a => a.Ending_Year, new { @class = "form-control", @placeholder = "Example: 2017", @type = "number" })
-                            @Html.ValidationMessageFor(a => a.Ending_Year)<br>
+                            <label>Batch Ending Year</label>
+                            <input type="number" name="Ending_Year" class="form-control" placeholder="Example: 2017" /><br>
 
-                            @Html.Label("Department")<br>
-                            @Html.DropDownListFor(a => a.Department_Id, Enumerable.Empty<SelectListItem>(),"-- Select a Department --", new { @class = "form-control", @id="dep"})<br><br>
-                            @Html.ValidationMessageFor(a => a.Department_Id)<br>
+                            <label>Department</label>
+                            <select class="form-control" name="Department_Id" id="dep"></select><br>
 
-                            <input type="submit" id="submit" class="btn btn-primary submit-btn" value="Add" >
-                        }
+                            <input type="submit" class="btn btn-primary submit-btn" value="Add">
+
+                        </form>
                     </div>
                 </div>
                 <center><a href="/SuperUser/ManageBatch">Go Back</a></center>
@@ -50,6 +40,8 @@
 
 <script>
     $(function () {
+
+
         $(document).ready(function () {
             $.ajax({
                 type: "POST",
@@ -59,19 +51,53 @@
                 success: function (response) {
                     len = response.length;
                     if (len == 0) {
-                        $("#dep").html('<option disabled selected>-There are no Departments in DB-</option>');
+                        $("#dep").html('<option disabled selected>--There are no Departments in DB-</option>');
                     }
                     else {
-                        $("#dep").html('<option disabled selected>-Select a Department-</option>');
+                        $("#dep").html('<option disabled selected>--Select a Department--</option>');
                         for (var i = 0; i < len; i++) {
-                            $("#dep").append(new Option(response[i].Department_Id));
+                            $("#dep").append(new Option(response[i].Department_Id, response[i].Department_Id));
                         }
                     }
                 },
                 error: function (response) {
-                    $("#dep").html('<option disabled selected>-There are no Departments in DB-</option>');
+                    $("#dep").html('<option disabled selected>--There are no Departments in DB--</option>');
                 }
             });
         });
+
+
+        $("form").validate({
+            rules: {
+                Starting_Year: "required",
+                Ending_Year: "required",
+                Department_Id: "required",
+                Batch_Id: {
+                    required: true,
+                    remote: {
+                        url: "/SuperUser/IsBatch_IdAvailable",
+                        type: "post",
+                        data: {
+                            function () { return $("#Batch").val(); },
+                        },
+                    },
+                },
+            },
+            messages: {
+                Starting_Year: "Please enter Starting Year !",
+                Ending_Year: "Please enter Ending Year !",
+                Department_Id: "Please select a Department !",
+                Batch_Id: {
+                    required: "Please enter Batch id !",
+                    remote: "Batch id already exists !"
+                },
+
+            },
+            submit: function (form) {
+                form.submit();
+            }
+        });
+
+
     });
 </script>

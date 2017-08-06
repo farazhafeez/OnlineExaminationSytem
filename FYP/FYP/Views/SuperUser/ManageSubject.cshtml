@@ -17,7 +17,7 @@
     <div class="container" style="border: none; padding: 0px; border-radius: 4px;">
         <h3><b>Manage Subjects</b></h3>
         <hr>
-        <button type="button" class="btn btn-primary" style="width:100%;" onclick="location.href='@Url.Action("AddSubject", "SuperUser", new {User_Id = @ViewBag.User_Id }, null)'"><span class="glyphicon glyphicon-plus-sign"></span> Add Subject</button>
+        <button type="button" class="btn btn-primary" style="width:100%;" onclick="location.href='@Url.Action("AddSubject", "SuperUser")'"><span class="glyphicon glyphicon-plus-sign"></span> Add Subject</button>
         <div class="container" style="border: 1px solid silver; padding: 0px; border-radius: 4px;">
             <div class="container-fluid" style="background-color: #F4F4F4; padding: 12px; border-radius: 4px;"><span class="glyphicon glyphicon-edit"></span> Subjects List</div>
             <br>
@@ -29,9 +29,9 @@
                             <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Subject Id</th>
                             <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Subject Name</th>
                             <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Section</th>
+                            <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Batch Id</th>
                             <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Teacher Id</th>
                             <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Teacher Name</th>
-                            <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Status</th>
                             <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Action</th>
                         </tr>
                     </thead>
@@ -41,22 +41,13 @@
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.Subject_Id</b></td>
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.Subject_Name</b></td>
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.Section</b></td>
+                            <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.Batch_Id</b></td>
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.User_Id</b></td>
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.User.First_Name @s.User.Last_Name</b></td>
-                            <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.Status</b></td>
-                            <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b></b></td>
-                            @if (s.Status == "Inactive")
-                            {
-                                <td style="height: 40px; width: 600px; text-align: center; font-size: 13px; color: red;">&nbsp;&nbsp;<b>@s.Status</b></td>
-                            }
-                            else if (s.Status == "Active")
-                            {
-                                <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.Status</b></td>
-                            }
                             
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">
 
-                                <button type="button" class="btn btn-success" onclick="location.href='@Url.Action("EditSubject", "SuperUser", new { Subject_Id = @s.Subject_Id, User_Id = @s.User_Id }, null)'">
+                                <button type="button" class="btn btn-success" onclick="location.href='@Url.Action("EditSubject", "SuperUser", new { Subject_Id = @s.Subject_Id }, null)'">
                                     <span class="glyphicon glyphicon-cog"></span> Edit Subject
                                 </button>
                                 

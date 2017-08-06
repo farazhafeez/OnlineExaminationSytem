@@ -34,13 +34,13 @@
                     </thead>
                     @foreach (var s in Model)
                     {
-                        <tr>
+                        <tr id="tr_@s.Batch_Id">
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.Batch_Id</b></td>
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.Starting_Year</b></td>
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.Ending_Year</b></td>
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.Department_Id</b></td>
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;
-                                <button type="button" class="btn btn-success" value="@s.Batch_Id">Batch Completed</button>
+                                <button id="@s.Batch_Id" class="btn btn-success">Complete Batch</button>
                             </td>
                         </tr>
                     }
@@ -50,3 +50,26 @@
         </div>
     </div>
 </body>
+
+<script>
+    $(function () {
+        $("td > button").click(function () {
+            var btnValue = this.id;
+            //var tempScrollTop = $(window).scrollTop();
+            $.ajax({
+                type: "POST",
+                url: "/SuperUser/AjaxMethodForCompleteBatch",
+                data: JSON.stringify({ Batch_Id: btnValue }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    $("#tr_" + btnValue).remove();
+                    //$(window).scrollTop(tempScrollTop);
+                },
+                error: function (response) {
+                    alert("error");
+                }
+            });
+        });
+    });
+</script>

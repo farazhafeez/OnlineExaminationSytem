@@ -1,18 +1,8 @@
-﻿@model FYP.Models.Department
+﻿
 @{
     ViewBag.Title = "AddDepartment";
     Layout = "~/Views/Shared/SuperUserLayout.cshtml";
 }
-
-<style>
-    .submit-btn {
-        width: 100%;
-    }
-    form .error{
-        color:red;
-    }
-</style>
-
 <body>
 
     <div class="container">
@@ -24,7 +14,7 @@
 
                         <form action="/SuperUser/AddDepartment" method="post">
                             <label>Department Id</label>
-                            <input type="text" name="Department_Id" id="dep" class = "form-control", placeholder = "Example: Bscs"/>
+                            <input type="text" name="Department_Id" id="dep" class = "form-control", placeholder = "Example: Bscs"/><br>
                             <input type="submit" class="btn btn-primary submit-btn" value="Add">
                         </form>
 
@@ -42,10 +32,10 @@
                 Department_Id: {
                     required: true,
                     remote: {
-                        url: "/superuser/isdepartment_idavailable",
+                        url: "/SuperUser/IsDepartment_IdAvailable",
                         type: "post",
                         data: {
-                            department_id:function () { return $("#dep").val(); },
+                            function () { return $("#dep").val(); },
                                     },
                                 },
                             },

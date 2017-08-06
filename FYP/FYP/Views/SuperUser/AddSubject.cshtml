@@ -1,4 +1,4 @@
-﻿@model FYP.Models.Subject
+﻿
 @{
     ViewBag.Title = "AddSubject";
     Layout = "~/Views/Shared/SuperUserLayout.cshtml";
@@ -16,27 +16,57 @@
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <div class="panel panel-primary">
-                    <div class="panel-heading"><center><b>Add a Subject for @ViewBag.User_Id</b></center></div>
+                    <div class="panel-heading"><center><b>Add a Subject</b></center></div>
                     <div class="panel-body">
 
-                        @using (Html.BeginForm())
-                        {
+                        <form action="/SuperUser/AddSubject" method="post">
+                            
+                            <label>Subject Id</label>
+                            <input type="text" id="Subject_Id" name="Subject_Id" class="form-control"/><br>
 
-                            @Html.Label("Enter Subject Name:") 
-                            @Html.TextBoxFor(a => a.Subject_Name, new { @class = "form-control", @placeholder = "Example: English" }) 
-                            @Html.ValidationMessageFor(a => a.Subject_Name)<br> 
+                            <label>Subject Name</label>
+                            <input type="text" name="Subject_Name" class="form-control" /><br>
 
-                            @Html.Label("Status:")
-                            <center>
-                                @Html.RadioButtonFor(a => a.Status, "Active", new { @checked = "checked" })
-                                @Html.Label("Active") &nbsp;&nbsp;&nbsp;&nbsp;
-                                @Html.RadioButtonFor(a => a.Status, "Inactive")
-                                @Html.Label("Inactive")
-                            </center>
+                            <label>Teacher</label>
+                            <select id="User_Id" name="User_Id" class="form-control"></select><br>
 
+                            <label>Batch</label>
+                            <select id="Batch_Id" name="Batch_Id" class="form-control"></select><br>
 
-                            <input type="submit" class="btn btn-primary submit-btn" value="Add" onclick="location.href='@Url.Action("AddSubject", "SuperUser", new {User_Id = @ViewBag.User_Id }, null)'" />
-                        }
+                            <label>Section</label>
+                            <select id="Section" name="Section" multiple="multiple" class="form-control">
+                                <option value="a">A</option>
+                                <option value="b">B</option>
+                                <option value="c">C</option>
+                                <option value="d">D</option>
+                                <option value="e">E</option>
+                                <option value="f">F</option>
+                                <option value="g">G</option>
+                                <option value="h">H</option>
+                                <option value="i">I</option>
+                                <option value="j">J</option>
+                                <option value="k">K</option>
+                                <option value="l">L</option>
+                                <option value="m">M</option>
+                                <option value="n">N</option>
+                                <option value="o">O</option>
+                                <option value="p">P</option>
+                                <option value="q">Q</option>
+                                <option value="r">R</option>
+                                <option value="s">S</option>
+                                <option value="t">T</option>
+                                <option value="u">U</option>
+                                <option value="v">V</option>
+                                <option value="w">W</option>
+                                <option value="x">X</option>
+                                <option value="y">Y</option>
+                                <option value="z">Z</option>
+                            </select>
+                            <label id="Section-error" class="error" for="Section"></label><br><br>
+
+                            <input type="submit" class="btn btn-primary submit-btn" value="Add"/>
+                        </form>
+
                     </div>
                 </div>
                 <center><a href="/SuperUser/ManageSubject">Go Back</a></center>
@@ -44,4 +74,104 @@
         </div>
     </div>
 </body>
-                                            
+     
+
+<script>
+    $(function () {
+
+        $(document).ready(function () {
+
+            $("#Section").multiselect({
+                includeSelectAllOption: true,
+                buttonWidth: '100%'
+            });
+            $(".caret").css('float', 'right');
+            $(".caret").css('margin', '8px 0');
+
+            $.ajax({
+                type: "POST",
+                url: "/SuperUser/AjaxMethodForGettingTeachers",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    len = response.length;
+                    if (len == 0) {
+                        $("#User_Id").html('<option disabled selected>--There are no teachers in Database--</option>');
+                    }
+                    else {
+                        $("#User_Id").html('<option disabled selected>--Select a Teacher--</option>');
+                        for (var i = 0; i < len; i++) {
+                            $("#User_Id").append(new Option("Teacher Id: " + response[i].User_Id + ", Teacher Name: " + response[i].First_Name + " " + response[i].Last_Name  , response[i].User_Id));
+                        }
+                    }
+                },
+                error: function (response) {
+                    $("#dep").html('<option disabled selected>--There are no teachers in Database--</option>');
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "/SuperUser/AjaxMethodForBatch",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    len = response.length;
+                    if (len == 0) {
+                        $("#Batch_Id").html('<option disabled selected>--There are no batches in Database--</option>');
+                    }
+                    else {
+                        $("#Batch_Id").html('<option disabled selected>--Select a Batch--</option>');
+                        for (var i = 0; i < len; i++) {
+                            $("#Batch_Id").append(new Option(response[i].Batch_Id, response[i].Batch_Id));
+                        }
+                    }
+                },
+                error: function (response) {
+                    $("#dep").html('<option disabled selected>--There are no teachers in Database--</option>');
+                }
+            });
+        });
+
+
+        $("form").validate({
+
+            rules: {
+
+                Subject_Id: {
+                    required: true,
+                    remote: {
+                        url: "/SuperUser/IsSubject_IdAvailable",
+                        type: "post",
+                        data: {
+                            function() { return $("#Subject_Id").val(); },
+                        },
+                    },
+                },
+
+                Subject_Name: "required",
+                User_Id: "required",
+                Batch_Id: "required",
+                Section: "required",
+            },
+
+            messages: {
+
+                Subject_Id: {
+                    required: "Please enter subject id !",
+                    remote: "Subject id already exists !"
+                },
+
+                Subject_Name: "Please enter subject name !",
+                User_Id: "Please select a teacher !",
+                Batch_Id: "Please select a batch !",
+                Section: "Please select minimum one section !",                
+            },
+            submit: function (form) {
+                form.submit();
+            }
+        });
+
+
+    });
+</script>                                       

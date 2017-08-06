@@ -1,13 +1,8 @@
-﻿@model FYP.Models.User
+﻿
 @{
     ViewBag.Title = "AddTeacher";
     Layout = "~/Views/Shared/SuperUserLayout.cshtml";
 }
-<style>
-    .submit-btn {
-        width: 100%;
-    }
-</style>
 
 <body>
 
@@ -17,42 +12,38 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading"><center><b>Create An Account For Teacher</b></center></div>
                     <div class="panel-body">
+                    
+                        <form action="/SuperUser/AddTeacher" method="post">
 
-                        @using (Html.BeginForm())
-                        {
+                            <label>Id</label>
+                            <input type="text" name="User_Id" id="User_Id" class="form-control" placeholder="Example: john.smith@gmail.com"/><br>
+                            
+                            <label>First Name</label>
+                            <input type="text" name="First_Name" class="form-control" placeholder="Example: john"/><br>
 
-                            @Html.Label("Id")
-                            @Html.TextBox("User_Id","", new { @class = "form-control", @placeholder = "Example: john.smith@gmail.com" })
-                            @Html.ValidationMessage("User_Id")<br>
+                            <label>Last Name</label>
+                            <input type="text" name="Last_Name" class="form-control" placeholder="Example: smith"/><br>
 
-                            @Html.Label("First Name")
-                            @Html.TextBox("First_Name", "", new { @class = "form-control", @placeholder = "Example: John" })
-                            @Html.ValidationMessage("First_Name")<br>
+                            <label>Password</label>
+                            <input type="password" name="Password" class="form-control"/><br>
 
-                            @Html.Label("Last Name")
-                            @Html.TextBox("Last_Name", "", new { @class = "form-control", @placeholder = "Example: Smith" })
-                            @Html.ValidationMessage("Last_Name")<br>
+                            <label>Contact Number</label>
+                            <input type="number" name="Contact_No" class="form-control" placeholder="Example: 03001234567"><br>
 
-                            @Html.Label("Password")
-                            @Html.Password("Password", "", new { @class = "form-control" })
-                            @Html.ValidationMessage("Password")<br>
+                            <label>Department</label>
+                            <select class="form-control" name="Department_Id" id="dep"></select><br>
 
-
-
-                            @Html.Label("Contact Number")
-                            @Html.TextBox("Contact_No", "", new { @class = "form-control", @placeholder = "Example: 0300*******" })
-                            @Html.ValidationMessage("Contact_No")<br>
-
-                            @Html.Label("Status:")
+                            <label>Status</label>
                             <center>
-                                @Html.RadioButton("Status", "Active", new { @checked = "checked" })
-                                @Html.Label("Active") &nbsp;&nbsp;&nbsp;&nbsp;
-                                @Html.RadioButton("Status", "Inactive")
-                                @Html.Label("Inactive")
+                                <input type="radio" name="Status" value="Active" checked/>
+                                <label>Active</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input type="radio" name="Status" value="Inactive" checked />
+                                <label>Inactive</label>
                             </center>
 
                             <input type="submit" class="btn btn-primary submit-btn" value="Register">
-                        }
+
+                        </form>
                     </div>
                 </div>
                 <center><a href="/SuperUser/ManageTeacher">Go Back</a></center>
@@ -60,3 +51,71 @@
         </div>
     </div>
 </body>
+
+<script>
+    $(function () {
+
+
+        $(document).ready(function () {
+            $.ajax({
+                type: "POST",
+                url: "/SuperUser/AjaxMethodForDepartment",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    len = response.length;
+                    if (len == 0) {
+                        $("#dep").html('<option disabled selected>--There are no Departments in DB-</option>');
+                    }
+                    else {
+                        $("#dep").html('<option disabled selected>--Select a Department--</option>');
+                        for (var i = 0; i < len; i++) {
+                            $("#dep").append(new Option(response[i].Department_Id));
+                        }
+                    }
+                },
+                error: function (response) {
+                    $("#dep").html('<option disabled selected>--There are no Departments in DB--</option>');
+                }
+            });
+        });
+
+
+        $("form").validate({
+            rules: {
+                First_Name: "required",
+                Last_Name: "required",
+                Password: "required",
+                Contact_No: "required",
+                Department_Id: "required",
+                User_Id: {
+                    required: true,
+                    remote: {
+                        url: "/SuperUser/IsUser_IdAvailable",
+                        type: "post",
+                        data: {
+                            function () { return $("#User_Id").val(); },
+                        },
+                    },
+                },
+            },
+            messages: {
+                First_Name: "Please enter First Name !",
+                Last_Name: "Please enter Last Name !",
+                Password: "Please enter a Password !",
+                Contact_No: "Please enter a Contact Number !",
+                Department_Id: "Please select a Department !",
+                User_Id: {
+                    required: "Please enter User id !",
+                    remote: "User id already exists !"
+                },
+
+            },
+            submit: function (form) {
+                form.submit();
+            }
+        });
+
+
+    });
+</script>

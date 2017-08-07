@@ -12,23 +12,13 @@ namespace FYP.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Subject
+    public partial class Drop_Out
     {
-        public Subject()
-        {
-            this.Exams = new HashSet<Exam>();
-            this.Questions = new HashSet<Question>();
-        }
-    
-        public string Subject_Id { get; set; }
-        public string Subject_Name { get; set; }
+        public int Drop_Out_Id { get; set; }
+        public Nullable<int> Exam_Id { get; set; }
         public string User_Id { get; set; }
-        public string Batch_Id { get; set; }
-        public string Section { get; set; }
-        public string Status { get; set; }
     
-        public virtual ICollection<Exam> Exams { get; set; }
-        public virtual ICollection<Question> Questions { get; set; }
+        public virtual Exam Exam { get; set; }
         public virtual User User { get; set; }
     }
 }

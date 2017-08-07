@@ -39,45 +39,81 @@ namespace FYP.Controllers
             Batch batch = new Batch();
             int marks=0;
 
+            var students = obj.Users.Where(x => x.Role.Equals("Student") && x.Status.Equals("Active"));
+            List<Enrolled> enrollmentList = new List<Enrolled>();
+
+            var allEnrolleds = obj.Enrolleds.ToList();
+            foreach(var i in allEnrolleds)
+            {
+                obj.Enrolleds.Remove(i);
+                obj.SaveChanges();
+            }
+
+            var allDropOuts = obj.Drop_Out.ToList();
+            foreach (var i in allDropOuts)
+            {
+                obj.Drop_Out.Remove(i);
+                obj.SaveChanges();
+            }
+
             if (examTerm.Equals("Mid"))
             {
                 marks = 30;
+
+                foreach (var i in subjects)
+                {
+                    subject = obj.Subjects.First(x => x.Subject_Id.Equals(i));
+                    batch = obj.Batches.First(x => x.Batch_Id.Equals(subject.Batch_Id));
+
+                    exam.Subject_Id = subject.Subject_Id;
+                    exam.Batch_Id = subject.Batch_Id;
+                    exam.Department_Id = batch.Department_Id;
+                    exam.Total_Marks = marks;
+                    exam.Exam_Session = examSession;
+                    exam.Status = "Active";
+                    obj.Exams.Add(exam);
+                    obj.SaveChanges();
+
+
+                    foreach (var j in students)
+                    {
+                        Enrolled enrollment = new Enrolled();
+                        if (j.Batch_Id == batch.Batch_Id && subject.Section.Contains(j.Section))
+                        {
+                            enrollment.User_Id = j.User_Id;
+                            enrollment.Exam_Id = exam.Exam_Id;
+
+                            enrollmentList.Add(enrollment);
+                        }
+                    }
+                }
             }
             else if(examTerm.Equals("Final"))
             {
                 marks = 50;
-            }
-
-            var students = obj.Users.Where(x => x.Role.Equals("Student"));
-            List<Enrolled> enrollmentList = new List<Enrolled>();
-
-            foreach (var i in subjects)
-            {
-                subject = obj.Subjects.First(x => x.Subject_Id.Equals(i));
-                batch = obj.Batches.First(x => x.Batch_Id.Equals( subject.Batch_Id ));
-
-                exam.Subject_Id = subject.Subject_Id;
-                exam.Batch_Id = subject.Batch_Id;
-                exam.Department_Id = batch.Department_Id;
-                exam.Total_Marks = marks;
-                exam.Exam_Session = examSession;
-                exam.Status = "Inactive";
-                obj.Exams.Add(exam);
-                obj.SaveChanges();
-
-
-                foreach (var j in students)
-                {
-                    Enrolled enrollment = new Enrolled();
-                    if (j.Batch_Id == batch.Batch_Id && subject.Section.Contains(j.Section))
+                
+                    var midExams = obj.Exams.Where(x => x.Exam_Session.Equals(examSession) && x.Status.Equals("Mid_Conducted"));
+                    foreach(var i in midExams)
                     {
-                        enrollment.User_Id = j.User_Id;
-                        enrollment.Exam_Id = exam.Exam_Id;
+                        i.Total_Marks = marks;
+                        i.Status = "Final_Pending";
 
-                        enrollmentList.Add(enrollment);
+                        foreach (var j in students)
+                        {
+                            Enrolled enrollment = new Enrolled();
+                            if (j.Batch_Id == i.Batch_Id && i.Subject.Section.Contains(j.Section))
+                            {
+                                enrollment.User_Id = j.User_Id;
+                                enrollment.Exam_Id = i.Exam_Id;
+
+                                enrollmentList.Add(enrollment);
+                            }
+                        }
                     }
-                }
+                obj.SaveChanges();
             }
+
+
             foreach(var i in enrollmentList)
             {
                 obj.Enrolleds.Add(i);

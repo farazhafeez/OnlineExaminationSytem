@@ -20,41 +20,26 @@
                     <div class="panel-heading"><center><b>Create An Account For Exam Controller</b></center></div>
                     <div class="panel-body">
 
-                        @using (Html.BeginForm())
-                        {
-                            
-                            @Html.Label("Id" ) 
-                            @Html.TextBoxFor(a => a.User_Id, new { @class="form-control", @placeholder="Example: john.smith@gmail.com"}) 
-                            @Html.ValidationMessageFor(a => a.User_Id)<br> 
-                        
-                            @Html.Label("First Name" ) 
-                            @Html.TextBoxFor(a => a.First_Name, new { @class = "form-control", @placeholder = "Example: John" }) 
-                            @Html.ValidationMessageFor(a => a.First_Name)<br> 
-                                                                             
-                            @Html.Label("Last Name" ) 
-                            @Html.TextBoxFor(a => a.Last_Name, new { @class = "form-control", @placeholder = "Example: Smith" }) 
-                            @Html.ValidationMessageFor(a => a.Last_Name)<br> 
-                                                                             
-                            @Html.Label("Password" ) 
-                            @Html.PasswordFor(a => a.Password, new { @class = "form-control" }) 
-                            @Html.ValidationMessageFor(a => a.Password)<br>
-                            
-                            
-                                                                             
-                            @Html.Label("Contact Number" ) 
-                            @Html.TextBoxFor(a => a.Contact_No, new { @class = "form-control", @placeholder = "Example: 0300*******" }) 
-                            @Html.ValidationMessageFor(a => a.Contact_No)<br> 
-                                                                              
-                            @Html.Label("Status:" )
-                            <center> 
-                            @Html.RadioButtonFor(a => a.Status, "Active", new { @checked = "checked" })
-                            @Html.Label("Active" ) &nbsp;&nbsp;&nbsp;&nbsp;
-                            @Html.RadioButtonFor(a => a.Status, "Inactive") 
-                            @Html.Label("Inactive" )
-                            </center>
-                                                     
+                        <form action="/SuperUser/AddExamController" method="post">
+
+                            <label>Id</label>
+                            <input type="text" name="User_Id" id="User_Id" class="form-control" placeholder="Example: john.smith@gmail.com" /><br>
+
+                            <label>First Name</label>
+                            <input type="text" name="First_Name" class="form-control" placeholder="Example: john" /><br>
+
+                            <label>Last Name</label>
+                            <input type="text" name="Last_Name" class="form-control" placeholder="Example: smith" /><br>
+
+                            <label>Password</label>
+                            <input type="password" name="Password" class="form-control" /><br>
+
+                            <label>Contact Number</label>
+                            <input type="text" name="Contact_No" class="form-control" placeholder="Example: 03001234567"><br>
+
                             <input type="submit" class="btn btn-primary submit-btn" value="Register">
-                        }
+
+                        </form>
                     </div>
                 </div>
                 <center><a href="/SuperUser/ManageExamController">Go Back</a></center>
@@ -63,3 +48,53 @@
     </div>
 </body>
 
+<script>
+    $(function () {
+        
+        $("form").validate({
+            rules: {
+                First_Name: "required",
+                Last_Name: "required",
+                Password: "required",
+                Department_Id: "required",
+                Contact_No: {
+                    required: true,
+                    number: true,
+                    minlength: 11,
+                    maxlength: 11,
+                },
+                User_Id: {
+                    required: true,
+                    remote: {
+                        url: "/SuperUser/IsUser_IdAvailable",
+                        type: "post",
+                        data: {
+                            function () { return $("#User_Id").val(); },
+                        },
+                    },
+                },
+            },
+            messages: {
+                First_Name: "Please enter First Name !",
+                Last_Name: "Please enter Last Name !",
+                Password: "Please enter a Password !",
+                Contact_No: {
+                    required: "Please enter a Contact Number !",
+                    number: "It must be a number !",
+                    minlength: "There must be 11 digits in contact no. !",
+                    maxlength: "There must be 11 digits in contact no. !",
+                },
+                User_Id: {
+                    required: "Please enter User id !",
+                    remote: "User id already exists !"
+                },
+
+            },
+            submit: function (form) {
+                form.submit();
+            }
+        });
+
+
+    });
+</script>

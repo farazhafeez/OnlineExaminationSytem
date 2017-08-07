@@ -1,4 +1,4 @@
-﻿@model FYP.Models.User
+﻿
 @{
     ViewBag.Title = "EditStudent";
     Layout = "~/Views/Shared/SuperUserLayout.cshtml";
@@ -33,23 +33,11 @@
                             <label>Contact</label>
                             <input type="text" name="Contact_No" value="@Model.Contact_No" class="form-control" /><br>
 
-                            <label>Department</label>
-                            <select name="Department_Id" id="Department_Id" class="form-control">
-                                <option disabled>--Select a Department--</option>
-                                <option value="@Model.Department_Id" selected>@Model.Department_Id</option>    
-                            </select><br>
-
-                            <label>Batch</label>
-                            <select name="Batch_Id" id="Batch_Id" class="form-control">
-                                <option disabled>--Select a Batch--</option>
-                                <option value="@Model.Batch_Id" selected>@Model.Batch_Id</option>
-                            </select><br>
-
                             <label>Section</label>
                             <select name="Section" id="Section" class="form-control">
                                 <option disabled>--Select a Section--</option>
                                 <option value="@Model.Section">@Model.Section</option>
-                            </select>
+                            </select><br>
 
                             <input type="submit" class="btn btn-primary submit-btn" value="Save" />
                         </form>
@@ -70,74 +58,35 @@
                 First_Name: "required",
                 Last_Name: "required",
                 Password: "required",
-                Contact_No: "required",
-                Department_Id: "required",
-                Batch_Id: "required",
                 Section: "required",
+                Contact_No: {
+                    required: "Please enter a Contact Number !",
+                    number: "It must be a number !",
+                    minlength: "There must be 11 digits in contact no. !",
+                    maxlength: "There must be 11 digits in contact no. !",
+                },
             },
             messages: {
                 First_Name: "Please enter first name !",
                 Last_Name: "Please enter last name !",
                 Password: "Please enter password !",
-                Contact_No: "Please enter contact number !",
-                Department_Id: "Please select a department !",
-                Batch_Id: "Please select a batch !",
                 Section: "Please select a section !",
+                Contact_No: {
+                    required: "Please enter a Contact Number !",
+                    number: "It must be a number !",
+                    minlength: "There must be 11 digits in contact no. !",
+                    maxlength: "There must be 11 digits in contact no. !",
+                },
             },
             submit: function (form) {
                 form.submit();
             }
         });
 
+        $("form").valid();
 
         $(document).ready(function () {
-            var dep = $("#Department_Id").val();
-            var btch = $("#Batch_Id").val();
             var sec = $("#Section").val();
-
-            $.ajax({
-                type: "POST",
-                url: "/SuperUser/AjaxMethodForDepartment",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    len = response.length;
-                    if (len == 0) {
-                        $("#Department_Id").html('<option disabled selected>--There are no Departments in DB-</option>');
-                    }
-                    else {
-                        for (var i = 0; i < len; i++) {
-                            if (!(dep == response[i].Department_Id))
-                                $("#Department_Id").append(new Option(response[i].Department_Id, response[i].Department_Id));
-                        }
-                    }
-                },
-                error: function (response) {
-                    $("#Department_Id").html('<option disabled selected>--There are no Departments in DB--</option>');
-                }
-            });
-        
-            $.ajax({
-                type: "POST",
-                url: "/SuperUser/AjaxMethodForBatch",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    len = response.length;
-                    if (len == 0) {
-                        $("#Batch_Id").html('<option disabled selected>--There are no batches in DB-</option>');
-                    }
-                    else {
-                        for (var i = 0; i < len; i++) {
-                            if (!(btch == response[i].Batch_Id))
-                                $("#Batch_Id").append(new Option(response[i].Batch_Id, response[i].Batch_Id));
-                        }
-                    }
-                },
-                error: function (response) {
-                    $("#Batch_Id").html('<option disabled selected>--There are no batches in DB--</option>');
-                }
-            });
 
             $.ajax({
                 type: "POST",

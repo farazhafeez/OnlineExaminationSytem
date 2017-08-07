@@ -91,11 +91,15 @@
                 First_Name: "required",
                 Last_Name: "required",
                 Password: "required",
-                Contact_No: "required",
                 Department_Id: "required",
                 Batch_Id: "required",
                 Section: "required",
-
+                Contact_No: {
+                    required: true,
+                    number: true,
+                    minlength: 11,
+                    maxlength: 11,
+                },
                 User_Id: {
                     required: true,
                     remote: {
@@ -111,11 +115,15 @@
                 First_Name: "Please enter first name !",
                 Last_Name: "Please enter last name !",
                 Password: "Please enter password !",
-                Contact_No: "Please enter contact number !",
                 Department_Id: "Please select a department !",
                 Batch_Id: "Please select a batch !",
                 Section: "Please select a section !",
-
+                Contact_No: {
+                    required: "Please enter a Contact Number !",
+                    number: "It must be a number !",
+                    minlength: "There must be 11 digits in contact no. !",
+                    maxlength: "There must be 11 digits in contact no. !",
+                },
                 User_Id: {
                     required: "Please enter user id !",
                     remote: "User id already exists !"

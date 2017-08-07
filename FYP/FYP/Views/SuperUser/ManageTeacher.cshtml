@@ -28,48 +28,31 @@
                         <tr>
                             <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Teacher ID</th>
                             <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Teacher Name</th>
+                            <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Department</th>
                             <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Contact No</th>
-                            <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Status</th>
                             <th style="height: 30px; width: 800px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Action</th>
                         </tr>
                     </thead>
                     @foreach (var s in Model)
                     {
-                        <tr>
+                        <tr id="tr_@s.User_Id">
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.User_Id</b></td>
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.First_Name @s.Last_Name</b></td>
+                            <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.Department_Id</b></td>
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.Contact_No</b></td>
-                            @if (s.Status == "Inactive")
-                            {
-                                <td style="height: 40px; width: 600px; text-align: center; font-size: 13px; color: red;">&nbsp;&nbsp;<b>@s.Status</b></td>
-                            }
-                            else if (s.Status == "Active")
-                            {
-                                <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.Status</b></td>
-                            }
                             <td style="height: 40px; width: 920px; text-align: center; font-size: 13px;">
 
                                 <button type="button" class="btn btn-success" onclick="location.href='@Url.Action("EditTeacher","SuperUser", new {User_Id=@s.User_Id},null)'">
                                     <span class="glyphicon glyphicon-cog"></span> Edit
                                 </button>
 
-                                <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("ManageSubject","SuperUser", new {User_Id=@s.User_Id},null)'">
+                                <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("ShowTeacherSubjects","SuperUser", new {User_Id=@s.User_Id},null)'">
                                     <span class="glyphicon glyphicon-book"></span> Subjects
                                 </button>
 
-
-                                @if (s.Status == "Active")
-                                {
-                                    <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("DisableUser","SuperUser", new {User_Id=@s.User_Id},null)'">
-                                        <span class="glyphicon glyphicon-ban-circle"></span> Disable
-                                    </button>
-                                }
-                                else if (s.Status == "Inactive")
-                                {
-                                    <button type="button" class="btn btn-success" onclick="location.href='@Url.Action("EnableUser","SuperUser", new {User_Id=@s.User_Id},null)'">
-                                        <span class="glyphicon glyphicon-ok-circle"></span> Enable
-                                    </button>
-                                }
+                                <button type="button" class="btn btn-danger" id="@s.User_Id">
+                                    <span class="glyphicon glyphicon-ban-circle"></span> Deactivate
+                                </button>
                             </td>
                         </tr>
                     }
@@ -78,3 +61,24 @@
         </div>
     </div>
 </body>
+
+<script>
+    $(function () {
+        $("tr button:nth-child(3)").click(function () {
+            var btnValue = this.id;
+            $.ajax({
+                type: "POST",
+                url: "/SuperUser/AjaxMethodForDeactivatingUser",
+                data: JSON.stringify({ User_Id: btnValue }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    $("#tr_" + btnValue).remove();
+                },
+                error: function (response) {
+                    alert("error");
+                }
+            });
+        });
+    });
+</script>

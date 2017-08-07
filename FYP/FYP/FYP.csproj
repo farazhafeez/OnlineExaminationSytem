@@ -145,6 +145,9 @@
     <Compile Include="Models\Department.cs">
       <DependentUpon>FYP_DB_Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Drop_Out.cs">
+      <DependentUpon>FYP_DB_Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Enrolled.cs">
       <DependentUpon>FYP_DB_Model.tt</DependentUpon>
     </Compile>
@@ -191,7 +194,6 @@
     <Compile Include="Models\User.cs">
       <DependentUpon>FYP_DB_Model.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\User_IdRemoteValidation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -369,6 +371,7 @@
     <Content Include="Views\ExamController\ExamSchedule.cshtml" />
     <Content Include="Views\ExamController\ExamEnrollment.cshtml" />
     <Content Include="Views\ExamController\ManageExam.cshtml" />
+    <Content Include="Views\SuperUser\ShowTeacherSubjects.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

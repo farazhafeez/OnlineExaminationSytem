@@ -17,35 +17,97 @@
                     <div class="panel-heading"><center><b>Edit @Model.User_Id's Account</b></center></div>
                     <div class="panel-body">
 
-                        @using (Html.BeginForm())
-                        {
+                        <form action="/SuperUser/EditTeacher" method="post">
 
-                            @Html.Label("First Name:")<br>
-                            @Html.TextBoxFor(model => model.First_Name, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.First_Name)<br>
+                            <input type="text" name="User_Id" value="@Model.User_Id" hidden /><br>
 
-                            @Html.Label("Last Name:")<br>
-                            @Html.TextBoxFor(model => model.Last_Name, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.Last_Name)<br>
+                            <label>First Name</label>
+                            <input type="text" name="First_Name" value="@Model.First_Name" class="form-control" /><br>
 
-                            @Html.Label("Password:")<br>
-                            @Html.TextBoxFor(model => model.Password, new { @class = "form-control", @type = "Password" })
-                            @Html.ValidationMessageFor(model => model.Password) <br>
+                            <label>Last Name</label>
+                            <input type="text" name="Last_Name" value="@Model.Last_Name" class="form-control" /><br>
 
-                            @Html.Label("Contact Number:")<br>
-                            @Html.TextBoxFor(model => model.Contact_No, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.Contact_No)<br>
+                            <label>Password</label>
+                            <input type="password" name="Password" value="@Model.Password" class="form-control" /><br>
 
-                            @Html.Label("Role:")<br>
-                            @Html.DropDownListFor(model => model.Role, (IEnumerable<SelectListItem>)ViewBag.RoleList, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.Role)<br>
+                            <label>Contact</label>
+                            <input type="text" name="Contact_No" value="@Model.Contact_No" class="form-control" /><br>
 
-                            <input type="submit" class="btn btn-primary submit-btn" value="Save Changes">
-                        }
+                            <label>Department</label>
+                            <select name="Department_Id" id="Department_Id" class="form-control">
+                                <option disabled>--Select a Department--</option>
+                                <option value="@Model.Department_Id" selected>@Model.Department_Id</option>
+                            </select><br>
+
+                            <input type="submit" class="btn btn-primary submit-btn" value="Save" />
+                        </form>
+
                     </div>
                 </div>
-                <center>@Html.ActionLink("Go Back", "ManageTeacher", "SuperUser", new {User_Id=@ViewBag.User_Id})</center>
+                <center><a href="/SuperUser/ManageTeacher">Go Back</a></center>
             </div>
         </div>
     </div>
 </body>
+
+<script>
+    $(function () {
+
+        $("form").validate({
+            rules: {
+                First_Name: "required",
+                Last_Name: "required",
+                Password: "required",
+                Department_Id: "required",
+                Contact_No: {
+                    required: "Please enter a Contact Number !",
+                    number: "It must be a number !",
+                    minlength: "There must be 11 digits in contact no. !",
+                    maxlength: "There must be 11 digits in contact no. !",
+                },
+            },
+            messages: {
+                First_Name: "Please enter first name !",
+                Last_Name: "Please enter last name !",
+                Password: "Please enter password !",
+                Department_Id: "Please select a department !",
+                Contact_No: {
+                    required: "Please enter a Contact Number !",
+                    number: "It must be a number !",
+                    minlength: "There must be 11 digits in contact no. !",
+                    maxlength: "There must be 11 digits in contact no. !",
+                },
+            },
+            submit: function (form) {
+                form.submit();
+            }
+        });
+
+
+        $(document).ready(function () {
+            var dep = $("#Department_Id").val();
+            
+            $.ajax({
+                type: "POST",
+                url: "/SuperUser/AjaxMethodForDepartment",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    len = response.length;
+                    if (len == 0) {
+                        $("#Department_Id").html('<option disabled selected>--There are no Departments in DB-</option>');
+                    }
+                    else {
+                        for (var i = 0; i < len; i++) {
+                            if (!(dep == response[i].Department_Id))
+                                $("#Department_Id").append(new Option(response[i].Department_Id, response[i].Department_Id));
+                        }
+                    }
+                },
+                error: function (response) {
+                    $("#Department_Id").html('<option disabled selected>--There are no Departments in DB--</option>');
+                }
+            }); 
+        });
+    });
+</script>

@@ -31,15 +31,8 @@ namespace FYP.Controllers
         //Teacher Accounts
         public ActionResult ManageTeacher()
         {
-            try
-            {
-                var u = obj.Users.Where(a => a.Role.Equals("Teacher"));
-                return View(u);
-            }
-            catch
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            var u = obj.Users.Where(a => a.Role.Equals("Teacher") && a.Status.Equals("Active"));
+            return View(u);
         }
 
         public ActionResult AddTeacher()
@@ -48,15 +41,11 @@ namespace FYP.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult AddTeacher(string User_Id , string First_Name, string Last_Name, string Password, string Contact_No, string Status)
+        public ActionResult AddTeacher(User user)
         {
             User u = new User();
-            u.User_Id = User_Id;
-            u.First_Name = First_Name;
-            u.Last_Name = Last_Name;
-            u.Password = Password;
-            u.Contact_No = Contact_No;
-            u.Status = Status;
+            u = user;
+            u.Status = "Active";
             u.Role = "Teacher";
 
             obj.Users.Add(u);
@@ -64,32 +53,21 @@ namespace FYP.Controllers
             return RedirectToAction("ManageTeacher", "SuperUser");
         }
 
-        public ActionResult EditTeacher(String User_Id)
+        public ActionResult EditTeacher(string User_Id)
         {
-
             User u = obj.Users.Find(User_Id);
-            List<SelectListItem> l = new List<SelectListItem>();
-            l.Add(new SelectListItem { Text = "Exam Controller", Value = "Exam_Controller" });
-            l.Add(new SelectListItem { Text = "Teacher", Value = "Teacher" });
-            l.Add(new SelectListItem { Text = "Student", Value = "Student" });
-
-            ViewBag.User_Id = User_Id;
-
-            ViewBag.RoleList = l;
-
             return View(u);
         }
 
-        [HttpPost, ActionName("EditTeacher")]
-        public ActionResult EditTeacherPost(string User_Id)
+        [HttpPost]
+        public ActionResult EditTeacher(User teacher)
         {
-            var UserToUpdate = obj.Users.Find(User_Id);
-            if (TryUpdateModel(UserToUpdate, "", new string[] { "User_Id", "Password", "First_Name", "Last_Name", "Contact_No", "Role" }))
+            var teacherToUpdate = obj.Users.First(x => x.User_Id.Equals(teacher.User_Id));
+            if (TryUpdateModel(teacherToUpdate, "", new string[] { "User_Id", "First_Name", "Last_Name", "Pasword", "Contact_No", "Department_Id" }))
             {
                 obj.SaveChanges();
-                return RedirectToAction("ManageTeacher", "SuperUser");
             }
-            return View(UserToUpdate);
+            return RedirectToAction("ManageTeacher", "SuperUser");
         }
 
 
@@ -101,7 +79,7 @@ namespace FYP.Controllers
         {
             try
             {
-                var u = obj.Users.Where(a => a.Role.Equals("Student"));
+                var u = obj.Users.Where(a => a.Role.Equals("Student") && a.Status.Equals("Active"));
 
                 return View(u);
             }
@@ -113,25 +91,13 @@ namespace FYP.Controllers
 
         public ActionResult AddStudent()
         {
-            //List<SelectListItem> dl = obj.Departments.AsEnumerable().Select(a => new SelectListItem { Text = a.Department_Id, Value = a.Department_Id }).ToList();
-            //ViewBag.d = dl;
-
-            //List<SelectListItem> sl = obj.Batches.AsEnumerable().Select(a => new SelectListItem { Text = a.Batch_Id, Value = a.Batch_Id }).ToList();
-            //ViewBag.s = sl;
-            //ViewBag.dept = obj.Departments.ToList();
             return View();
         }
         [HttpPost]
-        public ActionResult AddStudent(User us)
+        public ActionResult AddStudent(User user)
         {
             User u = new User();
-            u.User_Id = us.User_Id;
-            u.First_Name = us.First_Name;
-            u.Last_Name = us.Last_Name;
-            u.Password = us.Password;
-            u.Contact_No = us.Contact_No;
-            u.Batch_Id = us.Batch_Id;
-            u.Department_Id = us.Department_Id;
+            u = user;
             u.Status = "Active";
             u.Role = "Student";
 
@@ -149,8 +115,8 @@ namespace FYP.Controllers
         [HttpPost]
         public ActionResult EditStudent(User student)
         {
-            var StudentToUpdate = obj.Users.First(x => x.User_Id.Equals(student.User_Id));
-            if (TryUpdateModel(StudentToUpdate, "", new string[] { "User_Id", "First_Name", "Last_Name", "Pasword", "Contact_No", "Department_Id", "Batch_Id", "Section" }))
+            var studentToUpdate = obj.Users.First(x => x.User_Id.Equals(student.User_Id));
+            if (TryUpdateModel(studentToUpdate, "", new string[] { "User_Id", "First_Name", "Last_Name", "Pasword", "Contact_No", "Section" }))
             {
                 obj.SaveChanges();
             }
@@ -171,7 +137,7 @@ namespace FYP.Controllers
         {
             try
             {
-                var u = obj.Users.Where(a => a.Role.Equals("Exam_Controller"));
+                var u = obj.Users.Where(a => a.Role.Equals("Exam_Controller") && a.Status.Equals("Active"));
 
                 return View(u);
             }
@@ -186,17 +152,14 @@ namespace FYP.Controllers
 
             return View();
         }
+
         [HttpPost]
-        public ActionResult AddExamController(User us)
+        public ActionResult AddExamController(User user)
         {
 
             User u = new User();
-            u.User_Id = us.User_Id;
-            u.First_Name = us.First_Name;
-            u.Last_Name = us.Last_Name;
-            u.Password = us.Password;
-            u.Contact_No = us.Contact_No;
-            u.Status = us.Status;
+            u = user;
+            u.Status = "Active";
             u.Role = "Exam_Controller";
 
             obj.Users.Add(u);
@@ -205,36 +168,22 @@ namespace FYP.Controllers
 
         }
 
-        public ActionResult EditExamController(String User_Id)
+        public ActionResult EditExamController(string User_Id)
         {
-
             User u = obj.Users.Find(User_Id);
-            List<SelectListItem> l = new List<SelectListItem>();
-            l.Add(new SelectListItem { Text = "Exam Controller", Value = "Exam_Controller", Selected = true });
-            l.Add(new SelectListItem { Text = "Teacher", Value = "Teacher" });
-            l.Add(new SelectListItem { Text = "Student", Value = "Student" });
-
-            ViewBag.RoleList = l;
-
             return View(u);
         }
 
-        [HttpPost, ActionName("EditExamController")]
-        public ActionResult EditExamControllerPost(string User_Id)
+        [HttpPost]
+        public ActionResult EditExamController(User examController)
         {
-            var UserToUpdate = obj.Users.Find(User_Id);
-            if (TryUpdateModel(UserToUpdate, "", new string[] { "Password", "First_Name", "Last_Name", "Contact_No", "Role" }))
+            var examControllerToUpdate = obj.Users.First(x => x.User_Id.Equals(examController.User_Id));
+            if (TryUpdateModel(examControllerToUpdate, "", new string[] { "User_Id", "First_Name", "Last_Name", "Pasword", "Contact_No"}))
             {
                 obj.SaveChanges();
-                return RedirectToAction("ManageExamController", "SuperUser");
             }
-            return View(UserToUpdate);
+            return RedirectToAction("ManageExamController", "SuperUser");
         }
-
-
-
-
-
 
 
 
@@ -242,24 +191,10 @@ namespace FYP.Controllers
 
 
         //Subjects
-        public ActionResult ManageSubject(/*changed*//*string User_Id*/)
+        public ActionResult ManageSubject()
         {
             var s = obj.Subjects.Where(x => x.Status.Equals("Active"));
             return View(s);
-            //changed            
-            //try
-            //{
-            //    var u = obj.Subjects.Where(a => a.User_Id.Equals(User_Id));
-            //    User un = obj.Users.First(a => a.User_Id.Equals(User_Id));
-            //    ViewBag.User_Name = un.First_Name +" "+ un.Last_Name;
-            //    ViewBag.User_Id = User_Id;
-
-            //    return View(u);
-            //}
-            //catch
-            //{
-            //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            //}
         }
 
         public ActionResult AddSubject()
@@ -321,60 +256,36 @@ namespace FYP.Controllers
             return RedirectToAction("ManageSubject", "SuperUser");
         }
 
-
-
-
-
-
-
-
-
-
-
-        //Activate or Deactivate Users
-        public ActionResult EnableUser(string User_Id)
+        public ActionResult ShowTeacherSubjects(string User_Id)
         {
-            User u = obj.Users.First(a => a.User_Id.Equals(User_Id));
-            u.Status = "Active";
-            obj.SaveChanges();
-            if (u.Role.Equals("Teacher"))
-            {
-                return RedirectToAction("ManageTeacher", "SuperUser");
-            }
-            else if (u.Role.Equals("Student"))
-            {
-                return RedirectToAction("ManageStudent", "SuperUser");
-            }
-            else if (u.Role.Equals("Exam_Controller"))
-            {
-                return RedirectToAction("ManageExamController", "SuperUser");
-            }
-            return RedirectToAction("Index", "SuperUser");
-        }
-
-        public ActionResult DisableUser(string User_Id)
-        {
-            User u = obj.Users.First(a => a.User_Id.Equals(User_Id));
-            u.Status = "Inactive";
-            obj.SaveChanges();
-            if (u.Role.Equals("Teacher"))
-            {
-                return RedirectToAction("ManageTeacher", "SuperUser");
-            }
-            else if (u.Role.Equals("Student"))
-            {
-                return RedirectToAction("ManageStudent", "SuperUser");
-            }
-            else if (u.Role.Equals("Exam_Controller"))
-            {
-                return RedirectToAction("ManageExamController", "SuperUser");
-            }
-            return RedirectToAction("Index", "SuperUser");
+            ViewBag.user = User_Id + "'s";
+            var subjects = obj.Subjects.Where(x => x.User_Id.Equals(User_Id) && x.Status.Equals("Active"));
+            return View(subjects);
         }
 
 
 
 
+
+
+
+
+
+        //Deactivate Users
+        public JsonResult AjaxMethodForDeactivatingUser(string User_Id)
+        {
+            try
+            {
+                User u = obj.Users.Find(User_Id);
+                u.Status = "Inactive";
+                obj.SaveChanges();
+                return Json(true);
+            }
+            catch
+            {
+                return Json(null);
+            }
+        }
 
 
 

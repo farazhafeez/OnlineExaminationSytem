@@ -27,7 +27,7 @@
                     <thead>
                         <tr>
                             <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Exam Id</th>
-                            <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Subject Name</th>
+                            <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Subject Id</th>
                             <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Total Marks</th>
                             <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Batch Id</th>
                             <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Department Id</th>
@@ -40,20 +40,13 @@
                     {
                         <tr>
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@e.Exam_Id</b></td>
-                            <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@e.Subject.Subject_Name</b></td>
+                            <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@e.Subject_Id</b></td>
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@e.Total_Marks</b></td>
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@e.Batch_Id</b></td>
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@e.Department_Id</b></td>
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@e.Exam_Session</b></td>
+                            <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@e.Status</b></td>
                             
-                            @if (e.Status == "Inactive")
-                            {
-                                <td style="height: 40px; width: 600px; text-align: center; font-size: 13px; color: red;">&nbsp;&nbsp;<b>@e.Status</b></td>
-                            }
-                            else if (e.Status == "Active")
-                            {
-                                <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@e.Status</b></td>
-                            }
                             <td style="height: 40px; width: 920px; text-align: center; font-size: 13px;">
 
                                 <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("ExamSchedule","ExamController", new {Exam_Id=@e.Exam_Id},null)'">

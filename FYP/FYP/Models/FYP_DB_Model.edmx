@@ -32,6 +32,14 @@
           </Key>
           <Property Name="Department_Id" Type="nvarchar" MaxLength="255" Nullable="false" />
         </EntityType>
+        <EntityType Name="Drop_Out">
+          <Key>
+            <PropertyRef Name="Drop_Out_Id" />
+          </Key>
+          <Property Name="Drop_Out_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Exam_Id" Type="int" />
+          <Property Name="User_Id" Type="nvarchar" MaxLength="255" />
+        </EntityType>
         <EntityType Name="Enrolled">
           <Key>
             <PropertyRef Name="Enrolled_Id" />
@@ -51,7 +59,6 @@
           <Property Name="Department_Id" Type="nvarchar" MaxLength="255" />
           <Property Name="Exam_Session" Type="nvarchar" MaxLength="255" />
           <Property Name="Status" Type="nvarchar" MaxLength="255" />
-          <Property Name="Section" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="Options">
           <Key>
@@ -77,9 +84,8 @@
           </Key>
           <Property Name="Question_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Questions" Type="nvarchar" MaxLength="255" />
-          <Property Name="Type" Type="nvarchar" MaxLength="255" />
           <Property Name="Subject_Id" Type="nvarchar" MaxLength="255" />
-          <Property Name="Section" Type="nvarchar" MaxLength="255" />
+          <Property Name="Type" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="Result">
           <Key>
@@ -110,13 +116,12 @@
         <EntityType Name="Subject">
           <Key>
             <PropertyRef Name="Subject_Id" />
-            <PropertyRef Name="Section" />
           </Key>
           <Property Name="Subject_Id" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="Section" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="Subject_Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="Subject_Name" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="User_Id" Type="nvarchar" MaxLength="255" />
           <Property Name="Batch_Id" Type="nvarchar" MaxLength="255" />
+          <Property Name="Section" Type="nvarchar" MaxLength="255" />
           <Property Name="Status" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="User">
@@ -124,10 +129,10 @@
             <PropertyRef Name="User_Id" />
           </Key>
           <Property Name="User_Id" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="Password" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="First_Name" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="Last_Name" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="Role" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="255" />
+          <Property Name="First_Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="Last_Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="Role" Type="nvarchar" MaxLength="255" />
           <Property Name="Contact_No" Type="nvarchar" MaxLength="255" />
           <Property Name="Batch_Id" Type="nvarchar" MaxLength="255" />
           <Property Name="Department_Id" Type="nvarchar" MaxLength="255" />
@@ -182,6 +187,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="Drop_Out$ExamDrop_Out">
+          <End Role="Exam" Type="Self.Exam" Multiplicity="0..1" />
+          <End Role="Drop_Out" Type="Self.Drop_Out" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exam">
+              <PropertyRef Name="Exam_Id" />
+            </Principal>
+            <Dependent Role="Drop_Out">
+              <PropertyRef Name="Exam_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Drop_Out$UserDrop_Out">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Drop_Out" Type="Self.Drop_Out" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="User_Id" />
+            </Principal>
+            <Dependent Role="Drop_Out">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="Enrolled$ExamEnrolled">
           <End Role="Exam" Type="Self.Exam" Multiplicity="0..1" />
           <End Role="Enrolled" Type="Self.Enrolled" Multiplicity="*" />
@@ -206,18 +235,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="Exam$BatchExam">
-          <End Role="Batch" Type="Self.Batch" Multiplicity="0..1" />
-          <End Role="Exam" Type="Self.Exam" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Batch">
-              <PropertyRef Name="Batch_Id" />
-            </Principal>
-            <Dependent Role="Exam">
-              <PropertyRef Name="Batch_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="Exam$DepartmentExam">
           <End Role="Department" Type="Self.Department" Multiplicity="0..1" />
           <End Role="Exam" Type="Self.Exam" Multiplicity="*" />
@@ -236,11 +253,9 @@
           <ReferentialConstraint>
             <Principal Role="Subject">
               <PropertyRef Name="Subject_Id" />
-              <PropertyRef Name="Section" />
             </Principal>
             <Dependent Role="Exam">
               <PropertyRef Name="Subject_Id" />
-              <PropertyRef Name="Section" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -286,11 +301,9 @@
           <ReferentialConstraint>
             <Principal Role="Subject">
               <PropertyRef Name="Subject_Id" />
-              <PropertyRef Name="Section" />
             </Principal>
             <Dependent Role="Question">
               <PropertyRef Name="Subject_Id" />
-              <PropertyRef Name="Section" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -344,18 +357,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="Subject$BatchSubject">
-          <End Role="Batch" Type="Self.Batch" Multiplicity="0..1" />
-          <End Role="Subject" Type="Self.Subject" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Batch">
-              <PropertyRef Name="Batch_Id" />
-            </Principal>
-            <Dependent Role="Subject">
-              <PropertyRef Name="Batch_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="Subject$UserSubject">
           <End Role="User" Type="Self.User" Multiplicity="0..1" />
           <End Role="Subject" Type="Self.Subject" Multiplicity="*" />
@@ -380,22 +381,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="User$SemesterUser">
-          <End Role="Batch" Type="Self.Batch" Multiplicity="0..1" />
-          <End Role="User" Type="Self.User" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Batch">
-              <PropertyRef Name="Batch_Id" />
-            </Principal>
-            <Dependent Role="User">
-              <PropertyRef Name="Batch_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="FYP_DB_ModelStoreContainer">
           <EntitySet Name="Attempt_Log" EntityType="Self.Attempt_Log" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Batch" EntityType="Self.Batch" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Drop_Out" EntityType="Self.Drop_Out" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Enrolled" EntityType="Self.Enrolled" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Exam" EntityType="Self.Exam" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Options" EntityType="Self.Options" Schema="dbo" store:Type="Tables" />
@@ -422,6 +412,14 @@
             <End Role="Department" EntitySet="Department" />
             <End Role="Batch" EntitySet="Batch" />
           </AssociationSet>
+          <AssociationSet Name="Drop_Out$ExamDrop_Out" Association="Self.Drop_Out$ExamDrop_Out">
+            <End Role="Exam" EntitySet="Exam" />
+            <End Role="Drop_Out" EntitySet="Drop_Out" />
+          </AssociationSet>
+          <AssociationSet Name="Drop_Out$UserDrop_Out" Association="Self.Drop_Out$UserDrop_Out">
+            <End Role="User" EntitySet="User" />
+            <End Role="Drop_Out" EntitySet="Drop_Out" />
+          </AssociationSet>
           <AssociationSet Name="Enrolled$ExamEnrolled" Association="Self.Enrolled$ExamEnrolled">
             <End Role="Exam" EntitySet="Exam" />
             <End Role="Enrolled" EntitySet="Enrolled" />
@@ -429,10 +427,6 @@
           <AssociationSet Name="Enrolled$UserEnrolled" Association="Self.Enrolled$UserEnrolled">
             <End Role="User" EntitySet="User" />
             <End Role="Enrolled" EntitySet="Enrolled" />
-          </AssociationSet>
-          <AssociationSet Name="Exam$BatchExam" Association="Self.Exam$BatchExam">
-            <End Role="Batch" EntitySet="Batch" />
-            <End Role="Exam" EntitySet="Exam" />
           </AssociationSet>
           <AssociationSet Name="Exam$DepartmentExam" Association="Self.Exam$DepartmentExam">
             <End Role="Department" EntitySet="Department" />
@@ -474,20 +468,12 @@
             <End Role="Room" EntitySet="Room" />
             <End Role="Schedule" EntitySet="Schedule" />
           </AssociationSet>
-          <AssociationSet Name="Subject$BatchSubject" Association="Self.Subject$BatchSubject">
-            <End Role="Batch" EntitySet="Batch" />
-            <End Role="Subject" EntitySet="Subject" />
-          </AssociationSet>
           <AssociationSet Name="Subject$UserSubject" Association="Self.Subject$UserSubject">
             <End Role="User" EntitySet="User" />
             <End Role="Subject" EntitySet="Subject" />
           </AssociationSet>
           <AssociationSet Name="User$DepartmentUser" Association="Self.User$DepartmentUser">
             <End Role="Department" EntitySet="Department" />
-            <End Role="User" EntitySet="User" />
-          </AssociationSet>
-          <AssociationSet Name="User$SemesterUser" Association="Self.User$SemesterUser">
-            <End Role="Batch" EntitySet="Batch" />
             <End Role="User" EntitySet="User" />
           </AssociationSet>
         </EntityContainer>
@@ -520,9 +506,6 @@
           <Property Name="Department_Id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Department" Relationship="Self.Batch_DepartmentBatch" FromRole="Batch" ToRole="Department" />
-          <NavigationProperty Name="Exams" Relationship="Self.Exam_BatchExam" FromRole="Batch" ToRole="Exam" />
-          <NavigationProperty Name="Subjects" Relationship="Self.Subject_BatchSubject" FromRole="Batch" ToRole="Subject" />
-          <NavigationProperty Name="Users" Relationship="Self.User_SemesterUser" FromRole="Batch" ToRole="User" />
         </EntityType>
         <EntityType Name="Department">
           <Key>
@@ -532,6 +515,16 @@
           <NavigationProperty Name="Batches" Relationship="Self.Batch_DepartmentBatch" FromRole="Department" ToRole="Batch" />
           <NavigationProperty Name="Exams" Relationship="Self.Exam_DepartmentExam" FromRole="Department" ToRole="Exam" />
           <NavigationProperty Name="Users" Relationship="Self.User_DepartmentUser" FromRole="Department" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Drop_Out">
+          <Key>
+            <PropertyRef Name="Drop_Out_Id" />
+          </Key>
+          <Property Name="Drop_Out_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Exam_Id" Type="Int32" />
+          <Property Name="User_Id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Exam" Relationship="Self.Drop_Out_ExamDrop_Out" FromRole="Drop_Out" ToRole="Exam" />
+          <NavigationProperty Name="User" Relationship="Self.Drop_Out_UserDrop_Out" FromRole="Drop_Out" ToRole="User" />
         </EntityType>
         <EntityType Name="Enrolled">
           <Key>
@@ -554,9 +547,8 @@
           <Property Name="Department_Id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Exam_Session" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Section" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Batch" Relationship="Self.Exam_BatchExam" FromRole="Exam" ToRole="Batch" />
           <NavigationProperty Name="Department" Relationship="Self.Exam_DepartmentExam" FromRole="Exam" ToRole="Department" />
+          <NavigationProperty Name="Drop_Out" Relationship="Self.Drop_Out_ExamDrop_Out" FromRole="Exam" ToRole="Drop_Out" />
           <NavigationProperty Name="Enrolleds" Relationship="Self.Enrolled_ExamEnrolled" FromRole="Exam" ToRole="Enrolled" />
           <NavigationProperty Name="Subject" Relationship="Self.Exam_SubjectExam" FromRole="Exam" ToRole="Subject" />
           <NavigationProperty Name="Papers" Relationship="Self.Paper_ExamPaper" FromRole="Exam" ToRole="Paper" />
@@ -590,9 +582,8 @@
           </Key>
           <Property Name="Question_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Questions" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Type" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Subject_Id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Section" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Attempt_Log" Relationship="Self.Attempt_Log_QuestionAttempt_Log" FromRole="Question" ToRole="Attempt_Log" />
           <NavigationProperty Name="Options" Relationship="Self.Options_QuestionOptions" FromRole="Question" ToRole="Options" />
           <NavigationProperty Name="Papers" Relationship="Self.Paper_QuestionPaper" FromRole="Question" ToRole="Paper" />
@@ -633,15 +624,13 @@
         <EntityType Name="Subject">
           <Key>
             <PropertyRef Name="Subject_Id" />
-            <PropertyRef Name="Section" />
           </Key>
           <Property Name="Subject_Id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Section" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Subject_Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Subject_Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="User_Id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Batch_Id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Section" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Batch" Relationship="Self.Subject_BatchSubject" FromRole="Subject" ToRole="Batch" />
           <NavigationProperty Name="Exams" Relationship="Self.Exam_SubjectExam" FromRole="Subject" ToRole="Exam" />
           <NavigationProperty Name="Questions" Relationship="Self.Question_SubjectQuestion" FromRole="Subject" ToRole="Question" />
           <NavigationProperty Name="User" Relationship="Self.Subject_UserSubject" FromRole="Subject" ToRole="User" />
@@ -651,18 +640,18 @@
             <PropertyRef Name="User_Id" />
           </Key>
           <Property Name="User_Id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Password" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="First_Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Last_Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Role" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="First_Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Last_Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Role" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Contact_No" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Batch_Id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Department_Id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Section" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Attempt_Log" Relationship="Self.Attempt_Log_UserAttempt_Log" FromRole="User" ToRole="Attempt_Log" />
-          <NavigationProperty Name="Batch" Relationship="Self.User_SemesterUser" FromRole="User" ToRole="Batch" />
           <NavigationProperty Name="Department" Relationship="Self.User_DepartmentUser" FromRole="User" ToRole="Department" />
+          <NavigationProperty Name="Drop_Out" Relationship="Self.Drop_Out_UserDrop_Out" FromRole="User" ToRole="Drop_Out" />
           <NavigationProperty Name="Enrolleds" Relationship="Self.Enrolled_UserEnrolled" FromRole="User" ToRole="Enrolled" />
           <NavigationProperty Name="Results" Relationship="Self.Result_UserResult" FromRole="User" ToRole="Result" />
           <NavigationProperty Name="Subjects" Relationship="Self.Subject_UserSubject" FromRole="User" ToRole="Subject" />
@@ -715,42 +704,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="Exam_BatchExam">
-          <End Role="Batch" Type="Self.Batch" Multiplicity="0..1" />
-          <End Role="Exam" Type="Self.Exam" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Batch">
-              <PropertyRef Name="Batch_Id" />
-            </Principal>
-            <Dependent Role="Exam">
-              <PropertyRef Name="Batch_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="Subject_BatchSubject">
-          <End Role="Batch" Type="Self.Batch" Multiplicity="0..1" />
-          <End Role="Subject" Type="Self.Subject" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Batch">
-              <PropertyRef Name="Batch_Id" />
-            </Principal>
-            <Dependent Role="Subject">
-              <PropertyRef Name="Batch_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="User_SemesterUser">
-          <End Role="Batch" Type="Self.Batch" Multiplicity="0..1" />
-          <End Role="User" Type="Self.User" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Batch">
-              <PropertyRef Name="Batch_Id" />
-            </Principal>
-            <Dependent Role="User">
-              <PropertyRef Name="Batch_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="Exam_DepartmentExam">
           <End Role="Department" Type="Self.Department" Multiplicity="0..1" />
           <End Role="Exam" Type="Self.Exam" Multiplicity="*" />
@@ -772,6 +725,30 @@
             </Principal>
             <Dependent Role="User">
               <PropertyRef Name="Department_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Drop_Out_ExamDrop_Out">
+          <End Role="Exam" Type="Self.Exam" Multiplicity="0..1" />
+          <End Role="Drop_Out" Type="Self.Drop_Out" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exam">
+              <PropertyRef Name="Exam_Id" />
+            </Principal>
+            <Dependent Role="Drop_Out">
+              <PropertyRef Name="Exam_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Drop_Out_UserDrop_Out">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Drop_Out" Type="Self.Drop_Out" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="User_Id" />
+            </Principal>
+            <Dependent Role="Drop_Out">
+              <PropertyRef Name="User_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -805,11 +782,9 @@
           <ReferentialConstraint>
             <Principal Role="Subject">
               <PropertyRef Name="Subject_Id" />
-              <PropertyRef Name="Section" />
             </Principal>
             <Dependent Role="Exam">
               <PropertyRef Name="Subject_Id" />
-              <PropertyRef Name="Section" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -879,11 +854,9 @@
           <ReferentialConstraint>
             <Principal Role="Subject">
               <PropertyRef Name="Subject_Id" />
-              <PropertyRef Name="Section" />
             </Principal>
             <Dependent Role="Question">
               <PropertyRef Name="Subject_Id" />
-              <PropertyRef Name="Section" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -929,6 +902,7 @@
           <EntitySet Name="Attempt_Log" EntityType="Self.Attempt_Log" />
           <EntitySet Name="Batches" EntityType="Self.Batch" />
           <EntitySet Name="Departments" EntityType="Self.Department" />
+          <EntitySet Name="Drop_Out" EntityType="Self.Drop_Out" />
           <EntitySet Name="Enrolleds" EntityType="Self.Enrolled" />
           <EntitySet Name="Exams" EntityType="Self.Exam" />
           <EntitySet Name="Options" EntityType="Self.Option" />
@@ -955,18 +929,6 @@
             <End Role="Department" EntitySet="Departments" />
             <End Role="Batch" EntitySet="Batches" />
           </AssociationSet>
-          <AssociationSet Name="Exam_BatchExam" Association="Self.Exam_BatchExam">
-            <End Role="Batch" EntitySet="Batches" />
-            <End Role="Exam" EntitySet="Exams" />
-          </AssociationSet>
-          <AssociationSet Name="Subject_BatchSubject" Association="Self.Subject_BatchSubject">
-            <End Role="Batch" EntitySet="Batches" />
-            <End Role="Subject" EntitySet="Subjects" />
-          </AssociationSet>
-          <AssociationSet Name="User_SemesterUser" Association="Self.User_SemesterUser">
-            <End Role="Batch" EntitySet="Batches" />
-            <End Role="User" EntitySet="Users" />
-          </AssociationSet>
           <AssociationSet Name="Exam_DepartmentExam" Association="Self.Exam_DepartmentExam">
             <End Role="Department" EntitySet="Departments" />
             <End Role="Exam" EntitySet="Exams" />
@@ -974,6 +936,14 @@
           <AssociationSet Name="User_DepartmentUser" Association="Self.User_DepartmentUser">
             <End Role="Department" EntitySet="Departments" />
             <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="Drop_Out_ExamDrop_Out" Association="Self.Drop_Out_ExamDrop_Out">
+            <End Role="Exam" EntitySet="Exams" />
+            <End Role="Drop_Out" EntitySet="Drop_Out" />
+          </AssociationSet>
+          <AssociationSet Name="Drop_Out_UserDrop_Out" Association="Self.Drop_Out_UserDrop_Out">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Drop_Out" EntitySet="Drop_Out" />
           </AssociationSet>
           <AssociationSet Name="Enrolled_ExamEnrolled" Association="Self.Enrolled_ExamEnrolled">
             <End Role="Exam" EntitySet="Exams" />
@@ -1058,6 +1028,15 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Drop_Out">
+            <EntityTypeMapping TypeName="FYP_DB_Model.Drop_Out">
+              <MappingFragment StoreEntitySet="Drop_Out">
+                <ScalarProperty Name="Drop_Out_Id" ColumnName="Drop_Out_Id" />
+                <ScalarProperty Name="Exam_Id" ColumnName="Exam_Id" />
+                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Enrolleds">
             <EntityTypeMapping TypeName="FYP_DB_Model.Enrolled">
               <MappingFragment StoreEntitySet="Enrolled">
@@ -1077,7 +1056,6 @@
                 <ScalarProperty Name="Department_Id" ColumnName="Department_Id" />
                 <ScalarProperty Name="Exam_Session" ColumnName="Exam_Session" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="Section" ColumnName="Section" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1106,9 +1084,8 @@
               <MappingFragment StoreEntitySet="Question">
                 <ScalarProperty Name="Question_Id" ColumnName="Question_Id" />
                 <ScalarProperty Name="Questions" ColumnName="Questions" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="Subject_Id" ColumnName="Subject_Id" />
-                <ScalarProperty Name="Section" ColumnName="Section" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1145,10 +1122,10 @@
             <EntityTypeMapping TypeName="FYP_DB_Model.Subject">
               <MappingFragment StoreEntitySet="Subject">
                 <ScalarProperty Name="Subject_Id" ColumnName="Subject_Id" />
-                <ScalarProperty Name="Section" ColumnName="Section" />
                 <ScalarProperty Name="Subject_Name" ColumnName="Subject_Name" />
                 <ScalarProperty Name="User_Id" ColumnName="User_Id" />
                 <ScalarProperty Name="Batch_Id" ColumnName="Batch_Id" />
+                <ScalarProperty Name="Section" ColumnName="Section" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
               </MappingFragment>
             </EntityTypeMapping>

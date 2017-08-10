@@ -25,7 +25,6 @@ namespace FYP.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public DbSet<Attempt_Log> Attempt_Log { get; set; }
         public DbSet<Batch> Batches { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Drop_Out> Drop_Out { get; set; }

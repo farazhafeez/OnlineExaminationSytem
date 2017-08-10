@@ -14,6 +14,13 @@ namespace FYP.Models
     
     public partial class Batch
     {
+        public Batch()
+        {
+            this.Exams = new HashSet<Exam>();
+            this.Subjects = new HashSet<Subject>();
+            this.Users = new HashSet<User>();
+        }
+    
         public string Batch_Id { get; set; }
         public string Starting_Year { get; set; }
         public string Ending_Year { get; set; }
@@ -21,5 +28,8 @@ namespace FYP.Models
         public string Status { get; set; }
     
         public virtual Department Department { get; set; }
+        public virtual ICollection<Exam> Exams { get; set; }
+        public virtual ICollection<Subject> Subjects { get; set; }
+        public virtual ICollection<User> Users { get; set; }
     }
 }

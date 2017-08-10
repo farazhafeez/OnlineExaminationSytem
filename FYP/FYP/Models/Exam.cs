@@ -31,6 +31,7 @@ namespace FYP.Models
         public string Exam_Session { get; set; }
         public string Status { get; set; }
     
+        public virtual Batch Batch { get; set; }
         public virtual Department Department { get; set; }
         public virtual ICollection<Drop_Out> Drop_Out { get; set; }
         public virtual ICollection<Enrolled> Enrolleds { get; set; }

@@ -22,7 +22,7 @@ namespace FYP.Controllers
 
         public ActionResult ManageExam()
         {
-            var exams = obj.Exams.Include(a=>a.Schedules).Where(x => x.Status != "Conducted");
+            var exams = obj.Exams.Include(a=>a.Schedules).Where(x => x.Status != "Mid_Conducted" && x.Status != "Final_Conducted");
             return View(exams);
         }
 
@@ -36,6 +36,7 @@ namespace FYP.Controllers
         {
             Subject subject = new Subject();
             Exam exam = new Exam();
+            Schedule schedule = new Schedule();
             Batch batch = new Batch();
             int marks=0;
 
@@ -56,6 +57,13 @@ namespace FYP.Controllers
                 obj.SaveChanges();
             }
 
+            var allSchedules = obj.Schedules.ToList();
+            foreach(var i in allSchedules)
+            {
+                obj.Schedules.Remove(i);
+                obj.SaveChanges();
+            }
+
             if (examTerm.Equals("Mid"))
             {
                 marks = 30;
@@ -70,10 +78,11 @@ namespace FYP.Controllers
                     exam.Department_Id = batch.Department_Id;
                     exam.Total_Marks = marks;
                     exam.Exam_Session = examSession;
-                    exam.Status = "Active";
+                    exam.Status = "Enable";
+                    schedule.Exam_Id = exam.Exam_Id;
                     obj.Exams.Add(exam);
+                    obj.Schedules.Add(schedule);
                     obj.SaveChanges();
-
 
                     foreach (var j in students)
                     {
@@ -96,9 +105,13 @@ namespace FYP.Controllers
                     foreach(var i in midExams)
                     {
                         i.Total_Marks = marks;
-                        i.Status = "Final_Pending";
+                        i.Status = "Enable";
 
-                        foreach (var j in students)
+                        schedule.Exam_Id = i.Exam_Id;
+                        obj.Schedules.Add(schedule);
+                        obj.SaveChanges();
+
+                    foreach (var j in students)
                         {
                             Enrolled enrollment = new Enrolled();
                             if (j.Batch_Id == i.Batch_Id && i.Subject.Section.Contains(j.Section))
@@ -122,39 +135,80 @@ namespace FYP.Controllers
             return View();
         }
 
-        public ActionResult ExamEnrollment()
+        public ActionResult Enrolleds(int Exam_Id)
         {
-            return View();
+            var enrolleds = obj.Enrolleds.Where(x => x.Exam_Id == Exam_Id);
+            return View(enrolleds);
         }
+
+
+        public ActionResult DropOuts(int Exam_Id)
+        {
+            var dropOuts = obj.Drop_Out.Where(x => x.Exam_Id == Exam_Id);
+            return View(dropOuts);
+        }
+
 
         public ActionResult ExamSchedule(int Exam_Id)
         {
-            ViewBag.Exam_Id = Exam_Id;    
+            var schedule = obj.Schedules.First(x => x.Exam_Id == Exam_Id);
+            return View(schedule);
+        }
+
+
+        [HttpPost]
+        public JsonResult Drop(int Enrolled_Id)
+        {
             try
             {
-                var schedule = obj.Schedules.First(x => x.Exam_Id == Exam_Id);
-                return View(schedule);
+                var e = obj.Enrolleds.Find(Enrolled_Id);
+                Drop_Out d = new Drop_Out();
+                d.Exam_Id = e.Exam_Id;
+                d.User_Id = e.User_Id;
+
+                obj.Drop_Out.Add(d);
+                obj.Enrolleds.Remove(e);
+                obj.SaveChanges();
+                return Json(true);
             }
             catch
             {
-                Schedule schedule = new Schedule();
-                return View(schedule);
+                return Json(null);
             }
         }
 
+
         [HttpPost]
-        public ActionResult ExamScheduled(int exam, DateTime time, string room)
+        public JsonResult Enroll(int Drop_Out_Id)
         {
-            Schedule s = new Schedule();
+            try
+            {
+                var d = obj.Drop_Out.Find(Drop_Out_Id);
+                Enrolled e = new Enrolled();
+                e.Exam_Id = d.Exam_Id;
+                e.User_Id = d.User_Id;
 
-            s.Exam_Id = exam;
-            s.Time = time.ToString();
-            s.Room_Id = room;
+                obj.Enrolleds.Add(e);
+                obj.Drop_Out.Remove(d);
+                obj.SaveChanges();
+                return Json(true);
+            }
+            catch
+            {
+                return Json(null);
+            }
+        }
 
-            obj.Schedules.Add(s);
-            obj.SaveChanges();
 
-            return View();
+        [HttpPost]
+        public ActionResult AddExamSchedule(Schedule schedule)
+        {
+            var s = obj.Schedules.First(x => x.Schedule_Id.Equals(schedule.Schedule_Id));
+            s.Time_From = schedule.Time_From;
+            s.Time_To = schedule.Time_To;
+            s.Room_Id = schedule.Room_Id;
+            obj.SaveChanges();    
+            return RedirectToAction("ManageExam", "ExamController");
         }
 
         [HttpPost]
@@ -225,7 +279,8 @@ namespace FYP.Controllers
         {
             try
             {
-                var roomList = obj.Rooms.Select(x => new { x.Room_Id, x.Room_Capacity });
+                var rooms = obj.Rooms.ToList();
+                var roomList = rooms.Select(x => new { x.Room_Id, x.Room_Capacity });
                 return Json(roomList);
             }
             catch
@@ -233,19 +288,5 @@ namespace FYP.Controllers
                 return Json(null);
             }
         }
-
-        //[HttpPost]
-        //public JsonResult AjaxMethodForManageExam()
-        //{
-        //    try
-        //    {
-        //        var exams = obj.Exams.ToList();
-        //        return Json(exams.Select(x => new {x.Exam_Id, x.Total_Marks, x.Subject.Subject_Name, x.Batch_Id, x.Department_Id, x.Exam_Session, x.Status}));
-        //    }
-        //    catch
-        //    {
-        //        return Json(null);
-        //    }
-        //}
     }
 }

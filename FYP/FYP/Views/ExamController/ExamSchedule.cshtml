@@ -1,4 +1,4 @@
-﻿@model FYP.Models.Schedule
+﻿
 @{
     ViewBag.Title = "ExamSchedule";
     Layout = "~/Views/Shared/ExamControllerLayout.cshtml";
@@ -29,24 +29,22 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading"><center><b>Create Exam Schedule</b></center></div>
                     <div class="panel-body">
-                        @using (Html.BeginForm())
-                        {
+                    
+                        <form action="AddExamSchedule" method="post">
+                            <input type="text" name ="Schedule_Id" value="@Model.Schedule_Id" hidden/>
 
-                            @Html.Label("Exam Id:")<br>
-                            @Html.TextBoxFor(model => model.Exam_Id, new { @class = "form-control", @readonly  })
-                        }
-                        @*<form action="/ExamController/ExamScheduled" method="post">
-                            <label>Exam Id</label><br>
-                            <input value="@ViewBag.Exam_Id" readonly name="Exam_Id" class="form-control"/><br>
+                            <label>Exam Id</label>
+                            <input type="text" name ="Exam_Id" value="@Model.Exam_Id" class="form-control" readonly/>
 
-                            <label>Select a Time</label><br>
-                            <input type="datetime-local" name="Time" class="form-control"/><br>
+                            <label>Date and time</label>
+                            <input type="datetime-local" name="Time" value="@Model.Time" class="form-control"/>
 
-                            <label>Select a Room</label><br>
-                            <select id="room" name="Room" class="form-control"></select><br>
+                            <label>Room</label>
+                            <select id="room" name="Room_Id" value="@Model.Room_Id" class="form-control"></select><br>
 
-                            <input type="submit" class="btn btn-primary submit-btn" value="Create">
-                        </form>*@
+                            <input type="submit" class="btn btn-primary submit-btn" value="Add" />
+                        </form>
+
                     </div>
                 </div>
                 <center><a href="/ExamController/Index">Go Back</a></center>
@@ -55,9 +53,18 @@
     </div>
 </body>
 </html>
-
-<script type="text/javascript">
+<script>
     $(function () {
+
+        $(document).ready(function () {
+
+            //$("#room").multiselect({
+            //    includeSelectAllOption: true,
+            //    buttonWidth: '100%'
+            //});
+            //$(".caret").css('float', 'right');
+            //$(".caret").css('margin', '8px 0');
+
             $.ajax({
                 type: "POST",
                 url: "/ExamController/AjaxMethodForRoom",
@@ -76,8 +83,51 @@
                     }
                 },
                 error: function (response) {
-                    $("#dep").html('<option disabled selected>-There are no Rooms in DB-</option>');
                 }
             });
+
         });
+
+
+        //$("form").validate({
+
+        //    rules: {
+
+        //        Subject_Id: {
+        //            required: true,
+        //            remote: {
+        //                url: "/SuperUser/IsSubject_IdAvailable",
+        //                type: "post",
+        //                data: {
+        //                    function() { return $("#Subject_Id").val(); },
+        //                },
+        //            },
+        //        },
+
+        //        Subject_Name: "required",
+        //        User_Id: "required",
+        //        Batch_Id: "required",
+        //        Section: "required",
+        //    },
+
+        //    messages: {
+
+        //        Subject_Id: {
+        //            required: "Please enter subject id !",
+        //            remote: "Subject id already exists !"
+        //        },
+
+        //        Subject_Name: "Please enter subject name !",
+        //        User_Id: "Please select a teacher !",
+        //        Batch_Id: "Please select a batch !",
+        //        Section: "Please select minimum one section !",
+        //    },
+        //    submit: function (form) {
+        //        form.submit();
+        //    }
+        //});
+
+
+    });
 </script>
+  

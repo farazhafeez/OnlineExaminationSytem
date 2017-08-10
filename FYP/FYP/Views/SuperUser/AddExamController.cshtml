@@ -55,8 +55,10 @@
             rules: {
                 First_Name: "required",
                 Last_Name: "required",
-                Password: "required",
-                Department_Id: "required",
+                Password: "required", Password: {
+                    required: true,
+                    //minlength: 8,
+                },
                 Contact_No: {
                     required: true,
                     number: true,
@@ -77,7 +79,10 @@
             messages: {
                 First_Name: "Please enter First Name !",
                 Last_Name: "Please enter Last Name !",
-                Password: "Please enter a Password !",
+                Password: {
+                    required: "Please enter password!",
+                    //minlength: "Minimum length for your password is 8!",
+                },
                 Contact_No: {
                     required: "Please enter a Contact Number !",
                     number: "It must be a number !",

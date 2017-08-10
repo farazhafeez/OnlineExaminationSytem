@@ -27,6 +27,7 @@ namespace FYP.Models
         public string Section { get; set; }
         public string Status { get; set; }
     
+        public virtual Batch Batch { get; set; }
         public virtual ICollection<Exam> Exams { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
         public virtual User User { get; set; }

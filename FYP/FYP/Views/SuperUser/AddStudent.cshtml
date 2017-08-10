@@ -39,7 +39,9 @@
                             <select name="Department_Id" id="Department_Id" class="form-control"></select><br>
 
                             <label>Batch</label>
-                            <select name="Batch_Id" id="Batch_Id" class="form-control"></select><br>
+                            <select name="Batch_Id" id="Batch_Id" class="form-control">
+                                <option disabled selected>--No Department Selected--</option>    
+                            </select><br>
 
                             <label>Section</label>
                             <select id="Section" name="Section" class="form-control">
@@ -90,10 +92,13 @@
             rules: {
                 First_Name: "required",
                 Last_Name: "required",
-                Password: "required",
                 Department_Id: "required",
                 Batch_Id: "required",
                 Section: "required",
+                Password: {
+                    required: true,
+                    //minlength: 8,
+                },
                 Contact_No: {
                     required: true,
                     number: true,
@@ -112,21 +117,24 @@
                 },
             },
             messages: {
-                First_Name: "Please enter first name !",
-                Last_Name: "Please enter last name !",
-                Password: "Please enter password !",
-                Department_Id: "Please select a department !",
-                Batch_Id: "Please select a batch !",
-                Section: "Please select a section !",
+                First_Name: "Please enter first name!",
+                Last_Name: "Please enter last name!",
+                Department_Id: "Please select a department!",
+                Batch_Id: "Please select a batch!",
+                Section: "Please select a section!",
+                Password: {
+                    required: "Please enter password!",
+                    //minlength: "Minimum length for your password is 8!",
+                },
                 Contact_No: {
-                    required: "Please enter a Contact Number !",
-                    number: "It must be a number !",
-                    minlength: "There must be 11 digits in contact no. !",
-                    maxlength: "There must be 11 digits in contact no. !",
+                    required: "Please enter a Contact Number!",
+                    number: "It must be a number!",
+                    minlength: "There must be 11 digits in contact no.!",
+                    maxlength: "There must be 11 digits in contact no.!",
                 },
                 User_Id: {
-                    required: "Please enter user id !",
-                    remote: "User id already exists !"
+                    required: "Please enter user id!",
+                    remote: "User id already exists!"
                 },
 
             },
@@ -145,7 +153,8 @@
                 success: function (response) {
                     len = response.length;
                     if (len == 0) {
-                        $("#Department_Id").html('<option disabled selected>--There are no Departments in DB-</option>');
+                        $("#Department_Id").html('<option disabled selected>--There are no Departments in DB---</option>');
+                        $("#Batch_Id").html('<option disabled selected>--No Department Selected--</option>');
                     }
                     else {
                         $("#Department_Id").html('<option disabled selected>--Select a Department--</option>');
@@ -156,27 +165,23 @@
                 },
                 error: function (response) {
                     $("#Department_Id").html('<option disabled selected>--There are no Departments in DB--</option>');
+                    $("#Batch_Id").html('<option disabled selected>--No Department Selected--</option>');
                 }
             });
         });
 
-        $(document).ready(function () {
+        $("#Department_Id").change(function () {
             $.ajax({
                 type: "POST",
                 url: "/SuperUser/AjaxMethodForBatch",
+                data: JSON.stringify({ Department_Id: $("#Department_Id").val() }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    len = response.length;
-                    if (len == 0) {
-                        $("#Batch_Id").html('<option disabled selected>--There are no batches in DB-</option>');
-                    }
-                    else {
-                        $("#Batch_Id").html('<option disabled selected>--Select a Select--</option>');
-                        for (var i = 0; i < len; i++) {
+                        $("#Batch_Id").html('<option disabled selected>--Select a Batch--</option>');
+                        for (var i in response) {
                             $("#Batch_Id").append(new Option(response[i].Batch_Id, response[i].Batch_Id));
                         }
-                    }
                 },
                 error: function (response) {
                     $("#Batch_Id").html('<option disabled selected>--There are no batches in DB--</option>');

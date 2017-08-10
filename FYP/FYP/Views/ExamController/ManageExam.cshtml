@@ -32,6 +32,8 @@
                             <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Batch Id</th>
                             <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Department Id</th>
                             <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Exam Session</th>
+                            @*<th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Time</th>*@
+                            @*<th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Room</th>*@
                             <th style="height: 30px; width: 600px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Status</th>
                             <th style="height: 30px; width: 800px; text-align: center; font-size: 15px;">&nbsp;&nbsp;Action</th>
                         </tr>
@@ -45,16 +47,39 @@
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@e.Batch_Id</b></td>
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@e.Department_Id</b></td>
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@e.Exam_Session</b></td>
+
+                            @*if(@e.Schedules.Time != @null)
+                            {
+                                <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@e.Schedules.Time</b></td>
+                            }
+                            else
+                            {
+                                <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>Not Scheduled</b></td>
+                            }
+
+                            if(@e.Schedules.Room_Id != @null)
+                            {
+                                <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@e.Schedules.Room_Id</b></td>
+                            }
+                            else
+                            {
+                                <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>Not Scheduled</b></td>
+                            }*@
+
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@e.Status</b></td>
                             
-                            <td style="height: 40px; width: 920px; text-align: center; font-size: 13px;">
+                            <td style="height: 40px; width: 1500px; text-align: center; font-size: 13px;">
 
                                 <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("ExamSchedule","ExamController", new {Exam_Id=@e.Exam_Id},null)'">
                                     Schedule
                                 </button>
 
-                                <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("ExamEnrollment","ExamController", new {Exam_Id=@e.Exam_Id},null)'">
-                                    Enrollment
+                                <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Enrolleds","ExamController", new {Exam_Id=@e.Exam_Id},null)'">
+                                    Enrolleds
+                                </button>
+
+                                <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("DropOuts","ExamController", new {Exam_Id=@e.Exam_Id},null)'">
+                                    Drop Outs
                                 </button>
 
                             </td>

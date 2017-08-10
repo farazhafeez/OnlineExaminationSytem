@@ -136,9 +136,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Attempt_Log.cs">
-      <DependentUpon>FYP_DB_Model.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Batch.cs">
       <DependentUpon>FYP_DB_Model.tt</DependentUpon>
     </Compile>
@@ -178,7 +175,6 @@
     <Compile Include="Models\Question.cs">
       <DependentUpon>FYP_DB_Model.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\QuestionOption.cs" />
     <Compile Include="Models\Result.cs">
       <DependentUpon>FYP_DB_Model.tt</DependentUpon>
     </Compile>
@@ -369,9 +365,13 @@
     <Content Include="Views\ExamController\Index.cshtml" />
     <Content Include="Views\ExamController\ExamCreated.cshtml" />
     <Content Include="Views\ExamController\ExamSchedule.cshtml" />
-    <Content Include="Views\ExamController\ExamEnrollment.cshtml" />
     <Content Include="Views\ExamController\ManageExam.cshtml" />
     <Content Include="Views\SuperUser\ShowTeacherSubjects.cshtml" />
+    <Content Include="Views\ExamController\Enrolleds.cshtml" />
+    <Content Include="Views\ExamController\DropOuts.cshtml" />
+    <Content Include="Views\SuperUser\ManageRoom.cshtml" />
+    <Content Include="Views\SuperUser\AddRoom.cshtml" />
+    <Content Include="Views\SuperUser\EditRoom.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

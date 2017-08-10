@@ -350,23 +350,61 @@ namespace FYP.Controllers
 
 
 
+        //Rooms
+        public ActionResult ManageRoom()
+        {
+            return View(obj.Rooms.ToList());
+        }
+
+        public ActionResult AddRoom()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult AddRoom(Room r)
+        {
+            obj.Rooms.Add(r);
+            obj.SaveChanges();
+            return RedirectToAction("ManageRoom", "SuperUser");
+        }
+
+        [HttpGet]
+        public ActionResult EditRoom(string Room_Id)
+        {
+            var r = obj.Rooms.Find(Room_Id);
+            return View(r);
+        }
+
+        [HttpPost]
+        public ActionResult EditRoom(Room room)
+        {
+            var r = obj.Rooms.First(x => x.Room_Id == room.Room_Id);
+            r.Room_Capacity = room.Room_Capacity;
+            obj.SaveChanges();
+            return RedirectToAction("ManageRoom","SuperUser");
+        }
+
+
+
+
+
 
 
         //Activate or Deactivate Subject
-        public ActionResult EnableSubject(int? Subject_Id, string User_Id)
+        public JsonResult AjaxMethodForDisablingSubject(string Subject_Id)
         {
-            Subject s = obj.Subjects.First(a => a.Subject_Id.Equals(Subject_Id));
-            s.Status = "Active";
-            obj.SaveChanges();
-            return RedirectToAction("ManageSubject", new { User_Id = User_Id });
-        }
-
-        public ActionResult DisableSubject(int? Subject_Id, string User_Id)
-        {
-            Subject s = obj.Subjects.First(a => a.Subject_Id.Equals(Subject_Id));
-            s.Status = "Inactive";
-            obj.SaveChanges();
-            return RedirectToAction("ManageSubject", new { User_Id = User_Id });
+            try
+            {
+                var s = obj.Subjects.First(a => a.Subject_Id.Equals(Subject_Id));
+                s.Status = "Inactive";
+                obj.SaveChanges();
+                return Json(true);
+            }
+            catch
+            {
+                return Json(null);
+            }
         }
 
 
@@ -386,7 +424,21 @@ namespace FYP.Controllers
         }
 
         [HttpPost]
-        public JsonResult AjaxMethodForBatch()
+        public JsonResult AjaxMethodForBatch(string Department_Id)
+        {
+            try
+            {
+                var batches = obj.Batches.Where(x => x.Status.Equals("Active") && x.Department_Id.Equals(Department_Id));
+                return Json(batches.Select(x => new { x.Batch_Id }));
+            }
+            catch
+            {
+                return Json(null);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult AjaxMethodForBatchInAddSubject()
         {
             try
             {
@@ -462,6 +514,25 @@ namespace FYP.Controllers
             return Json(sections);
         }
 
+        [HttpPost]
+        public JsonResult AjaxMethodForRemovingRoom(string Room_Id)
+        {
+            try
+            {
+                var r = obj.Rooms.Find(Room_Id);
+                obj.Rooms.Attach(r);
+                obj.Rooms.Remove(r);
+                obj.SaveChanges();
+                return Json(true);
+            }
+            catch
+            {
+                return Json(null);
+            }
+        }
+
+
+
 
 
 
@@ -490,6 +561,12 @@ namespace FYP.Controllers
         public JsonResult IsSubject_IdAvailable(string Subject_Id)
         {
             return Json(!obj.Subjects.Any(a => a.Subject_Id.Equals(Subject_Id)));
+        }
+
+        [HttpPost]
+        public JsonResult IsRoom_IdAvailable(string Room_Id)
+        {
+            return Json(!obj.Rooms.Any(a => a.Room_Id.Equals(Room_Id)));
         }
     }
 }

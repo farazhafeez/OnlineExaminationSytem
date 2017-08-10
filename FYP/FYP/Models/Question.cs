@@ -16,7 +16,6 @@ namespace FYP.Models
     {
         public Question()
         {
-            this.Attempt_Log = new HashSet<Attempt_Log>();
             this.Options = new HashSet<Option>();
             this.Papers = new HashSet<Paper>();
         }
@@ -26,7 +25,6 @@ namespace FYP.Models
         public string Subject_Id { get; set; }
         public string Type { get; set; }
     
-        public virtual ICollection<Attempt_Log> Attempt_Log { get; set; }
         public virtual ICollection<Option> Options { get; set; }
         public virtual ICollection<Paper> Papers { get; set; }
         public virtual Subject Subject { get; set; }

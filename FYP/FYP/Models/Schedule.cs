@@ -14,17 +14,12 @@ namespace FYP.Models
     
     public partial class Schedule
     {
-        public Schedule()
-        {
-            this.Attempt_Log = new HashSet<Attempt_Log>();
-        }
-    
         public int Schedule_Id { get; set; }
-        public string Time { get; set; }
         public string Room_Id { get; set; }
         public Nullable<int> Exam_Id { get; set; }
+        public Nullable<System.DateTime> Time_From { get; set; }
+        public Nullable<System.DateTime> Time_To { get; set; }
     
-        public virtual ICollection<Attempt_Log> Attempt_Log { get; set; }
         public virtual Exam Exam { get; set; }
         public virtual Room Room { get; set; }
     }

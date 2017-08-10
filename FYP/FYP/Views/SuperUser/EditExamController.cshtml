@@ -51,18 +51,24 @@
             rules: {
                 First_Name: "required",
                 Last_Name: "required",
-                Password: "required",
+                Password: {
+                    required: true,
+                    //minlength: 8,
+                },
                 Contact_No: {
-                    required: "Please enter a Contact Number !",
-                    number: "It must be a number !",
-                    minlength: "There must be 11 digits in contact no. !",
-                    maxlength: "There must be 11 digits in contact no. !",
+                    required: true,
+                    number: true,
+                    minlength: 11,
+                    maxlength: 11,
                 },
             },
             messages: {
                 First_Name: "Please enter first name !",
                 Last_Name: "Please enter last name !",
-                Password: "Please enter password !",
+                Password: {
+                    required: "Please enter password!",
+                    //minlength: "Minimum length for your password is 8!",
+                },
                 Contact_No: {
                     required: "Please enter a Contact Number !",
                     number: "It must be a number !",

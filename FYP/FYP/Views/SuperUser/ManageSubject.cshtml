@@ -12,6 +12,9 @@
     a.my_class {
         color: white;
     }
+    button {
+        display: inline-block;
+    }
 </style>
 <body>
     <div class="container" style="border: none; padding: 0px; border-radius: 4px;">
@@ -37,7 +40,7 @@
                     </thead>
                     @foreach (var s in Model)
                     {
-                        <tr>
+                        <tr id="tr_@s.Subject_Id">
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.Subject_Id</b></td>
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.Subject_Name</b></td>
                             <td style="height: 40px; width: 600px; text-align: center; font-size: 13px;">&nbsp;&nbsp;<b>@s.Section</b></td>
@@ -51,18 +54,9 @@
                                     <span class="glyphicon glyphicon-cog"></span> Edit Subject
                                 </button>
                                 
-                                @if (s.Status == "Active")
-                                {
-                                    <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("DisableSubject", "SuperUser", new { Subject_Id = @s.Subject_Id, User_Id = @s.User_Id }, null)'">
-                                        <span class="glyphicon glyphicon-ban-circle"></span> Disable
-                                    </button>
-                                }
-                                else if (s.Status == "Inactive")
-                                {
-                                    <button type="button" class="btn btn-success" onclick="location.href='@Url.Action("EnableSubject", "SuperUser", new { Subject_Id = @s.Subject_Id, User_Id = @s.User_Id }, null)'">
-                                        <span class="glyphicon glyphicon-ok-circle"></span> Enable
-                                    </button>
-                                }
+                                <button type="button" class="btn btn-danger" id="@s.Subject_Id">
+                                    <span class="glyphicon glyphicon-ban-circle"></span> Disable
+                                </button>
 
                             </td>
                         </tr>
@@ -72,3 +66,23 @@
         </div>
     </div>
 </body>
+<script>
+    $(function () {
+        $("tr button:nth-child(2)").click(function () {
+            var btnValue = this.id;
+            $.ajax({
+                type: "POST",
+                url: "/SuperUser/AjaxMethodForDisablingSubject",
+                data: JSON.stringify({ Subject_Id: btnValue }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    $("#tr_" + btnValue).remove();
+                },
+                error: function (response) {
+                    alert("error");
+                }
+            });
+        });
+    });
+</script>

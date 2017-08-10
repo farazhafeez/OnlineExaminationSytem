@@ -19,10 +19,10 @@
                             <input type="text" name="Batch_Id" id="Batch_Id" class="form-control" placeholder="Example: bscs-f13"/><br>
 
                             <label>Batch Starting Year</label>
-                            <input type="number" name="Starting_Year" class="form-control" placeholder="Example: 2013" /><br>
+                            <input type="text" name="Starting_Year" class="form-control" placeholder="Example: 2013" /><br>
 
                             <label>Batch Ending Year</label>
-                            <input type="number" name="Ending_Year" class="form-control" placeholder="Example: 2017" /><br>
+                            <input type="text" name="Ending_Year" class="form-control" placeholder="Example: 2017" /><br>
 
                             <label>Department</label>
                             <select class="form-control" name="Department_Id" id="dep"></select><br>
@@ -69,8 +69,16 @@
 
         $("form").validate({
             rules: {
-                Starting_Year: "required",
-                Ending_Year: "required",
+                Starting_Year: {
+                    required: true,
+                    number: true,
+                    rangelength: [4,4]
+                },
+                Ending_Year: {
+                    required: true,
+                    number: true,
+                    rangelength: [4, 4]
+                },
                 Department_Id: "required",
                 Batch_Id: {
                     required: true,
@@ -84,12 +92,20 @@
                 },
             },
             messages: {
-                Starting_Year: "Please enter Starting Year !",
-                Ending_Year: "Please enter Ending Year !",
-                Department_Id: "Please select a Department !",
+                Starting_Year: {
+                    required: "Please enter Starting Year!",
+                    number: "It must be a number!",
+                    rangelength:"Its length must be 4 digits!",
+                }, 
+                Ending_Year: {
+                    required: "Please enter Ending Year!",
+                    number: "It must be a number!",
+                    rangelength: "Its length must be 4 digits!",
+                }, 
+                Department_Id: "Please select a Department!",
                 Batch_Id: {
-                    required: "Please enter Batch id !",
-                    remote: "Batch id already exists !"
+                    required: "Please enter Batch id!",
+                    remote: "Batch id already exists!"
                 },
 
             },

@@ -99,7 +99,7 @@
             <PropertyRef Name="Schedule_Id" />
           </Key>
           <Property Name="Schedule_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Room_Id" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Room_Id" Type="nvarchar" MaxLength="255" />
           <Property Name="Exam_Id" Type="int" />
           <Property Name="Time_From" Type="datetime2" Precision="0" />
           <Property Name="Time_To" Type="datetime2" Precision="0" />
@@ -311,7 +311,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Schedule$RoomSchedule">
-          <End Role="Room" Type="Self.Room" Multiplicity="1">
+          <End Role="Room" Type="Self.Room" Multiplicity="0..1">
             <OnDelete Action="Cascade" />
           </End>
           <End Role="Schedule" Type="Self.Schedule" Multiplicity="*" />
@@ -594,7 +594,7 @@
             <PropertyRef Name="Schedule_Id" />
           </Key>
           <Property Name="Schedule_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Room_Id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Room_Id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Exam_Id" Type="Int32" />
           <Property Name="Time_From" Type="DateTime" Precision="0" />
           <Property Name="Time_To" Type="DateTime" Precision="0" />
@@ -854,7 +854,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Schedule_RoomSchedule">
-          <End Role="Room" Type="Self.Room" Multiplicity="1">
+          <End Role="Room" Type="Self.Room" Multiplicity="0..1">
             <OnDelete Action="Cascade" />
           </End>
           <End Role="Schedule" Type="Self.Schedule" Multiplicity="*" />

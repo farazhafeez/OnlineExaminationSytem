@@ -39,99 +39,125 @@ namespace FYP.Controllers
             Schedule schedule = new Schedule();
             Batch batch = new Batch();
             int marks=0;
+            List<string> examError = new List<string>();
 
             var students = obj.Users.Where(x => x.Role.Equals("Student") && x.Status.Equals("Active"));
+
             List<Enrolled> enrollmentList = new List<Enrolled>();
 
-            var allEnrolleds = obj.Enrolleds.ToList();
-            foreach(var i in allEnrolleds)
-            {
-                obj.Enrolleds.Remove(i);
-                obj.SaveChanges();
-            }
+            var conductedExams = obj.Exams.Where(x => x.Status.Equals("Mid_Conducted") || x.Status.Equals("Final_Conducted"));
 
-            var allDropOuts = obj.Drop_Out.ToList();
-            foreach (var i in allDropOuts)
+            //getting all enrollment rows that have exams conducted
+            foreach (var i in conductedExams)
             {
-                obj.Drop_Out.Remove(i);
-                obj.SaveChanges();
+                var allEnrolledsForConductedExams = obj.Enrolleds.Where(x => x.Exam_Id == i.Exam_Id);
+                var allDropOutForConductedExams = obj.Drop_Out.Where(x => x.Exam_Id == i.Exam_Id);
+                var allSchedulesForConductedExams = obj.Schedules.Where(x => x.Exam_Id == i.Exam_Id);
+                foreach (var j in allEnrolledsForConductedExams)
+                {
+                    obj.Enrolleds.Remove(j);
+                }
+                foreach (var j in allDropOutForConductedExams)
+                {
+                    obj.Drop_Out.Remove(j);
+                }
+                foreach (var j in allSchedulesForConductedExams)
+                {
+                    obj.Schedules.Remove(j);
+                }
             }
-
-            var allSchedules = obj.Schedules.ToList();
-            foreach(var i in allSchedules)
-            {
-                obj.Schedules.Remove(i);
-                obj.SaveChanges();
-            }
+            obj.SaveChanges();
+           
 
             if (examTerm.Equals("Mid"))
             {
                 marks = 30;
-
+            
                 foreach (var i in subjects)
                 {
-                    subject = obj.Subjects.First(x => x.Subject_Id.Equals(i));
-                    batch = obj.Batches.First(x => x.Batch_Id.Equals(subject.Batch_Id));
-
-                    exam.Subject_Id = subject.Subject_Id;
-                    exam.Batch_Id = subject.Batch_Id;
-                    exam.Department_Id = batch.Department_Id;
-                    exam.Total_Marks = marks;
-                    exam.Exam_Session = examSession;
-                    exam.Status = "Enable";
-                    schedule.Exam_Id = exam.Exam_Id;
-                    obj.Exams.Add(exam);
-                    obj.Schedules.Add(schedule);
-                    obj.SaveChanges();
-
-                    foreach (var j in students)
+                    try
                     {
-                        Enrolled enrollment = new Enrolled();
-                        if (j.Batch_Id == batch.Batch_Id && subject.Section.Contains(j.Section))
-                        {
-                            enrollment.User_Id = j.User_Id;
-                            enrollment.Exam_Id = exam.Exam_Id;
-
-                            enrollmentList.Add(enrollment);
-                        }
+                        var check = obj.Exams.First(x => x.Subject_Id == i && x.Exam_Session == examSession && x.Total_Marks == 30);
+                        examError.Add(check.Subject_Id);
                     }
-                }
-            }
-            else if(examTerm.Equals("Final"))
-            {
-                marks = 50;
-                
-                    var midExams = obj.Exams.Where(x => x.Exam_Session.Equals(examSession) && x.Status.Equals("Mid_Conducted"));
-                    foreach(var i in midExams)
+                    catch
                     {
-                        i.Total_Marks = marks;
-                        i.Status = "Enable";
+                        subject = obj.Subjects.First(x => x.Subject_Id.Equals(i));
+                        batch = obj.Batches.First(x => x.Batch_Id.Equals(subject.Batch_Id));
 
-                        schedule.Exam_Id = i.Exam_Id;
+                        exam.Subject_Id = subject.Subject_Id;
+                        exam.Batch_Id = subject.Batch_Id;
+                        exam.Department_Id = batch.Department_Id;
+                        exam.Total_Marks = marks;
+                        exam.Exam_Session = examSession;
+                        exam.Status = "Enable";
+                        schedule.Exam_Id = exam.Exam_Id;
+                        obj.Exams.Add(exam);
                         obj.Schedules.Add(schedule);
                         obj.SaveChanges();
 
-                    foreach (var j in students)
+                        foreach (var j in students)
                         {
                             Enrolled enrollment = new Enrolled();
-                            if (j.Batch_Id == i.Batch_Id && i.Subject.Section.Contains(j.Section))
+                            if (j.Batch_Id == batch.Batch_Id && subject.Section.Contains(j.Section))
                             {
                                 enrollment.User_Id = j.User_Id;
-                                enrollment.Exam_Id = i.Exam_Id;
+                                enrollment.Exam_Id = exam.Exam_Id;
+
+                                enrollmentList.Add(enrollment);
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            else if (examTerm.Equals("Final"))
+            {
+                marks = 50;
+                var midExams = obj.Exams.Where(x => x.Exam_Session.Equals(examSession) && x.Status.Equals("Mid_Conducted"));
+                foreach (var i in subjects)
+                {
+                    try
+                    {
+                        var mid = midExams.First(x => x.Subject_Id == i);
+                        mid.Total_Marks = marks;
+                        mid.Status = "Enable";
+
+                        schedule.Exam_Id = mid.Exam_Id;
+                        obj.Schedules.Add(schedule);
+
+                        foreach (var j in students)
+                        {
+                            Enrolled enrollment = new Enrolled();
+                            if (j.Batch_Id == mid.Batch_Id && mid.Subject.Section.Contains(j.Section))
+                            {
+                                enrollment.User_Id = j.User_Id;
+                                enrollment.Exam_Id = mid.Exam_Id;
 
                                 enrollmentList.Add(enrollment);
                             }
                         }
                     }
+                    catch
+                    {
+                        examError.Add(i);
+                    }
+                }
+
                 obj.SaveChanges();
             }
 
 
-            foreach(var i in enrollmentList)
+            foreach (var i in enrollmentList)
             {
                 obj.Enrolleds.Add(i);
                 obj.SaveChanges();
             }
+
+            ViewBag.examError = examError;
+
+            //return RedirectToAction("ManageExam","ExamController");
             return View();
         }
 
@@ -151,8 +177,28 @@ namespace FYP.Controllers
 
         public ActionResult ExamSchedule(int Exam_Id)
         {
-            var schedule = obj.Schedules.First(x => x.Exam_Id == Exam_Id);
-            return View(schedule);
+            Schedule schedule = new Schedule();
+            try
+            {
+                schedule = obj.Schedules.First(x => x.Exam_Id == Exam_Id);
+                return View(schedule);
+            }
+            catch
+            {
+                return View(schedule);
+            }
+        }
+
+        
+        [HttpPost]
+        public ActionResult AddExamSchedule(Schedule schedule)
+        {
+            var s = obj.Schedules.First(x => x.Schedule_Id.Equals(schedule.Schedule_Id));
+            s.Time_From = schedule.Time_From;
+            s.Time_To = schedule.Time_To;
+            s.Room_Id = schedule.Room_Id;
+            obj.SaveChanges();    
+            return RedirectToAction("ManageExam", "ExamController");
         }
 
 
@@ -200,16 +246,6 @@ namespace FYP.Controllers
         }
 
 
-        [HttpPost]
-        public ActionResult AddExamSchedule(Schedule schedule)
-        {
-            var s = obj.Schedules.First(x => x.Schedule_Id.Equals(schedule.Schedule_Id));
-            s.Time_From = schedule.Time_From;
-            s.Time_To = schedule.Time_To;
-            s.Room_Id = schedule.Room_Id;
-            obj.SaveChanges();    
-            return RedirectToAction("ManageExam", "ExamController");
-        }
 
         [HttpPost]
         public JsonResult AjaxMethodForDepartment()

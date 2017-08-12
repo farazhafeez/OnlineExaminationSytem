@@ -36,11 +36,16 @@
                             <label>Exam Id</label>
                             <input type="text" name ="Exam_Id" value="@Model.Exam_Id" class="form-control" readonly/>
 
-                            <label>Date and time</label>
-                            <input type="datetime-local" name="Time" value="@Model.Time" class="form-control"/>
+                            <label>Time From</label>
+                            <input type="datetime-local" name="Time_From" value="@Model.Time_From" class="form-control"/>
+
+                            <label>Time To</label>
+                            <input type="datetime-local" name="Time_To" value="@Model.Time_To" class="form-control" />
 
                             <label>Room</label>
-                            <select id="room" name="Room_Id" value="@Model.Room_Id" class="form-control"></select><br>
+                            <select id="room" name="Room_Id" class="form-control">
+                                <option value="@Model.Room_Id" selected>@Model.Room_Id</option>
+                            </select><br>
 
                             <input type="submit" class="btn btn-primary submit-btn" value="Add" />
                         </form>
@@ -58,6 +63,7 @@
 
         $(document).ready(function () {
 
+            var roomId = $("#room").val();
             //$("#room").multiselect({
             //    includeSelectAllOption: true,
             //    buttonWidth: '100%'
@@ -78,7 +84,10 @@
                     else {
                         $("#room").html('<option disabled selected>-Select a Room-</option>');
                         for (var i = 0; i < len; i++) {
-                            $("#room").append(new Option("Room Number: " + response[i].Room_Id + ", Room Capacity: " + response[i].Room_Capacity, response[i].Room_Id));
+                            if (roomId == response[i].Room_Id)
+                                $("#room").append(new Option("Room Number: " + response[i].Room_Id + ", Room Capacity: " + response[i].Room_Capacity, response[i].Room_Id, true , true));
+                            else
+                                $("#room").append(new Option("Room Number: " + response[i].Room_Id + ", Room Capacity: " + response[i].Room_Capacity, response[i].Room_Id));
                         }
                     }
                 },

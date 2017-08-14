@@ -57,5 +57,12 @@ namespace FYP.Controllers
            
             return View();
         }
+
+        //[HttpPost]
+        public ActionResult LogOut(/*string User_Id*/)
+        {
+            Session.Clear();
+            return RedirectToAction("Index","Home");
+        }
     }
 }

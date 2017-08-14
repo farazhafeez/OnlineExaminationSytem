@@ -177,26 +177,69 @@ namespace FYP.Controllers
 
         public ActionResult ExamSchedule(int Exam_Id)
         {
-            Schedule schedule = new Schedule();
+            
             try
             {
-                schedule = obj.Schedules.First(x => x.Exam_Id == Exam_Id);
-                return View(schedule);
+                var schedule = obj.Schedules.Where(x => x.Exam_Id == Exam_Id);
+                Schedule s = new Schedule();
+                int a = 0;
+                List<string> rooms = new List<string>();
+                foreach(var i in schedule)
+                {
+                    if(a == 0)
+                    {
+                        s.Exam_Id = i.Exam_Id;
+                        s.Time_From = i.Time_From;
+                        s.Time_To = i.Time_To;
+                        rooms.Add(i.Room_Id);
+                        a++;
+                    }
+                    else
+                    {
+                        rooms.Add(i.Room_Id);
+                    }
+                }
+                ViewBag.rooms = rooms;
+                return View(s);
             }
             catch
             {
+                Schedule schedule = new Schedule();
                 return View(schedule);
             }
         }
 
         
         [HttpPost]
-        public ActionResult AddExamSchedule(Schedule schedule)
+        public ActionResult AddExamSchedule(Schedule schedule, string[] rooms)
         {
-            var s = obj.Schedules.First(x => x.Schedule_Id.Equals(schedule.Schedule_Id));
-            s.Time_From = schedule.Time_From;
-            s.Time_To = schedule.Time_To;
-            s.Room_Id = schedule.Room_Id;
+            var schedules = obj.Schedules.Where(x => x.Exam_Id == schedule.Exam_Id);
+            foreach(var i in schedules)
+            {
+                obj.Schedules.Remove(i);
+            }
+            obj.SaveChanges();
+            if(rooms != null)
+            {
+                foreach (var i in rooms)
+                {
+                    Schedule s = new Schedule();
+                    s.Exam_Id = schedule.Exam_Id;
+                    s.Time_From = schedule.Time_From;
+                    s.Time_To = schedule.Time_To;
+                    s.Room_Id = i;
+                    obj.Schedules.Add(s);
+                }
+            }
+            else
+            {
+                Schedule s = new Schedule();
+                s.Exam_Id = schedule.Exam_Id;
+                s.Time_From = schedule.Time_From;
+                s.Time_To = schedule.Time_To;
+                s.Room_Id = schedule.Room_Id;
+                obj.Schedules.Add(s);
+            }
             obj.SaveChanges();    
             return RedirectToAction("ManageExam", "ExamController");
         }
@@ -316,7 +359,7 @@ namespace FYP.Controllers
             try
             {
                 var rooms = obj.Rooms.ToList();
-                var roomList = rooms.Select(x => new { x.Room_Id, x.Room_Capacity });
+                var roomList = rooms.Select(x => new { x.Room_Id });
                 return Json(roomList);
             }
             catch

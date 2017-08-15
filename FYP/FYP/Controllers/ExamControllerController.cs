@@ -23,6 +23,8 @@ namespace FYP.Controllers
         public ActionResult ManageExam()
         {
             var exams = obj.Exams.Include(a=>a.Schedules).Where(x => x.Status != "Mid_Conducted" && x.Status != "Final_Conducted");
+            ViewBag.midexamerrors = TempData["midexamerrors"];
+            ViewBag.finalexamerrors = TempData["finalexamerrors"];
             return View(exams);
         }
 
@@ -110,6 +112,7 @@ namespace FYP.Controllers
 
                     }
                 }
+                TempData["midexamerrors"] = examError;
             }
 
             else if (examTerm.Equals("Final"))
@@ -144,7 +147,7 @@ namespace FYP.Controllers
                         examError.Add(i);
                     }
                 }
-
+                TempData["finalexamerrors"] = examError;
                 obj.SaveChanges();
             }
 
@@ -155,10 +158,7 @@ namespace FYP.Controllers
                 obj.SaveChanges();
             }
 
-            ViewBag.examError = examError;
-
-            //return RedirectToAction("ManageExam","ExamController");
-            return View();
+            return RedirectToAction("ManageExam", "ExamController");
         }
 
         public ActionResult Enrolleds(int Exam_Id)

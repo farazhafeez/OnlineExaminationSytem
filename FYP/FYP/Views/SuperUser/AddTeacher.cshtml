@@ -25,7 +25,10 @@
                             <input type="text" name="Last_Name" class="form-control" placeholder="Example: smith"/><br>
 
                             <label>Password</label>
-                            <input type="password" name="Password" class="form-control"/><br>
+                            <input type="password" name="Password" id="Password" class="form-control"/><br>
+
+                            <label>Confirm Password</label>
+                            <input type="password" name="CPassword" class="form-control" /><br>
 
                             <label>Contact Number</label>
                             <input type="text" name="Contact_No" class="form-control" placeholder="Example: 03001234567"><br>
@@ -47,6 +50,21 @@
 <script>
     $(function () {
 
+        jQuery.validator.addMethod("pwcheck",
+            function (value, element, param) {
+                if (this.optional(element)) {
+                    return true;
+                } else if (!/[a-z]/.test(value)) {
+                    return false;
+                } else if (!/[0-9]/.test(value)) {
+                    return false;
+                }
+                else if (!/[a-z0-9]{8,}/.test(value)) {
+                    return false;
+                }
+
+                return true;
+            });
 
         $(document).ready(function () {
             $.ajax({
@@ -79,7 +97,11 @@
                 Last_Name: "required",
                 Password: {
                     required: true,
-                    //minlength: 8,
+                    pwcheck: true,
+                },
+                CPassword: {
+                    required: true,
+                    equalTo: "#Password",
                 },
                 Department_Id: "required",
                 Contact_No: {
@@ -104,7 +126,11 @@
                 Last_Name: "Please enter Last Name !",
                 Password: {
                     required: "Please enter password!",
-                    //minlength: "Minimum length for your password is 8!",
+                    pwcheck: "Password must contain eight characters minimum, at least one letter and one number!",
+                },
+                CPassword: {
+                    required: "Please enter password!",
+                    equalTo: "Password doesn't match!",
                 },
                 Department_Id: "Please select a Department !",
                 Contact_No: {

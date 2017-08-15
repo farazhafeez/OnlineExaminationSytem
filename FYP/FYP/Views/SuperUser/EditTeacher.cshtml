@@ -53,13 +53,29 @@
 <script>
     $(function () {
 
+        jQuery.validator.addMethod("pwcheck",
+            function (value, element, param) {
+                if (this.optional(element)) {
+                    return true;
+                } else if (!/[a-z]/.test(value)) {
+                    return false;
+                } else if (!/[0-9]/.test(value)) {
+                    return false;
+                }
+                else if (!/[a-z0-9]{8,}/.test(value)) {
+                    return false;
+                }
+
+                return true;
+            });
+
         $("form").validate({
             rules: {
                 First_Name: "required",
                 Last_Name: "required",
                 Password: {
                     required: true,
-                    //minlength: 8,
+                    pwcheck: true,
                 },
                 Department_Id: "required",
                 Contact_No: {
@@ -74,7 +90,7 @@
                 Last_Name: "Please enter last name !",
                 Password: {
                     required: "Please enter password!",
-                    //minlength: "Minimum length for your password is 8!",
+                    pwcheck: "Password must contain eight characters minimum, at least one letter and one number!",
                 },
                 Department_Id: "Please select a department !",
                 Contact_No: {

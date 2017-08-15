@@ -131,6 +131,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ExamControllerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ResultController.cs" />
     <Compile Include="Controllers\SuperUserController.cs" />
     <Compile Include="Controllers\TeacherController.cs" />
     <Compile Include="Global.asax.cs">
@@ -149,6 +150,9 @@
       <DependentUpon>FYP_DB_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Exam.cs">
+      <DependentUpon>FYP_DB_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Freeze.cs">
       <DependentUpon>FYP_DB_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FYP_DB_Model.Context.cs">
@@ -453,6 +457,9 @@
     <Content Include="Views\SuperUser\ManageRoom.cshtml" />
     <Content Include="Views\SuperUser\AddRoom.cshtml" />
     <Content Include="Views\SuperUser\EditRoom.cshtml" />
+    <Content Include="Views\SuperUser\ManageFreezeStudents.cshtml" />
+    <Content Include="Views\SuperUser\FreezeStudent.cshtml" />
+    <Content Include="Views\SuperUser\UnFreezeStudent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -38,5 +38,6 @@ namespace FYP.Models
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Freeze> Freezes { get; set; }
     }
 }

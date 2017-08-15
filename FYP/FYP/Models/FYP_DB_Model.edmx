@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="FYP_DB_Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="FYP_DB_Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Batch">
           <Key>
             <PropertyRef Name="Batch_Id" />
@@ -47,6 +47,15 @@
           <Property Name="Batch_Id" Type="nvarchar" MaxLength="255" />
           <Property Name="Department_Id" Type="nvarchar" MaxLength="255" />
           <Property Name="Exam_Session" Type="nvarchar" MaxLength="255" />
+          <Property Name="Status" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Freeze">
+          <Key>
+            <PropertyRef Name="Student_Id" />
+          </Key>
+          <Property Name="Student_Id" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Freezing_Date" Type="datetime2" Precision="0" />
+          <Property Name="Unfreezing_Date" Type="datetime2" Precision="0" />
           <Property Name="Status" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="Options">
@@ -378,6 +387,7 @@
           <EntitySet Name="Drop_Out" EntityType="Self.Drop_Out" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Enrolled" EntityType="Self.Enrolled" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Exam" EntityType="Self.Exam" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Freeze" EntityType="Self.Freeze" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Options" EntityType="Self.Options" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Paper" EntityType="Self.Paper" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Question" EntityType="Self.Question" Schema="dbo" store:Type="Tables" />
@@ -467,8 +477,7 @@
             <End Role="User" EntitySet="User" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="FYP_DB_Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -973,7 +982,17 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Subject" EntitySet="Subjects" />
           </AssociationSet>
+          <EntitySet Name="Freezes" EntityType="FYP_DB_Model.Freeze" />
         </EntityContainer>
+        <EntityType Name="Freeze">
+          <Key>
+            <PropertyRef Name="Student_Id" />
+          </Key>
+          <Property Name="Student_Id" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Freezing_Date" Type="DateTime" Precision="0" />
+          <Property Name="Unfreezing_Date" Type="DateTime" Precision="0" />
+          <Property Name="Status" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1115,6 +1134,16 @@
                 <ScalarProperty Name="Department_Id" ColumnName="Department_Id" />
                 <ScalarProperty Name="Section" ColumnName="Section" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Freezes">
+            <EntityTypeMapping TypeName="FYP_DB_Model.Freeze">
+              <MappingFragment StoreEntitySet="Freeze">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Unfreezing_Date" ColumnName="Unfreezing_Date" />
+                <ScalarProperty Name="Freezing_Date" ColumnName="Freezing_Date" />
+                <ScalarProperty Name="Student_Id" ColumnName="Student_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

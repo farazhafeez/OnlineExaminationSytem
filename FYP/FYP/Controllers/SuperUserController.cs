@@ -63,10 +63,17 @@ namespace FYP.Controllers
         public ActionResult EditTeacher(User teacher)
         {
             var teacherToUpdate = obj.Users.First(x => x.User_Id.Equals(teacher.User_Id));
-            if (TryUpdateModel(teacherToUpdate, "", new string[] { "User_Id", "First_Name", "Last_Name", "Pasword", "Contact_No", "Department_Id" }))
-            {
-                obj.SaveChanges();
-            }
+            teacherToUpdate.First_Name = teacher.First_Name;
+            teacherToUpdate.Last_Name = teacher.Last_Name;
+            teacherToUpdate.Password = teacher.Password;
+            teacherToUpdate.Contact_No = teacher.Contact_No;
+            teacherToUpdate.Department = teacher.Department;
+            obj.SaveChanges();
+
+            //if (TryUpdateModel(teacherToUpdate, "", new string[] { "User_Id", "First_Name", "Last_Name", "Pasword", "Contact_No", "Department_Id" }))
+            //{
+            //    obj.SaveChanges();
+            //}
             return RedirectToAction("ManageTeacher", "SuperUser");
         }
 
@@ -116,10 +123,17 @@ namespace FYP.Controllers
         public ActionResult EditStudent(User student)
         {
             var studentToUpdate = obj.Users.First(x => x.User_Id.Equals(student.User_Id));
-            if (TryUpdateModel(studentToUpdate, "", new string[] { "User_Id", "First_Name", "Last_Name", "Pasword", "Contact_No", "Section" }))
-            {
-                obj.SaveChanges();
-            }
+            studentToUpdate.First_Name = student.First_Name;
+            studentToUpdate.Last_Name = student.Last_Name;
+            studentToUpdate.Password = student.Password;
+            studentToUpdate.Contact_No = student.Contact_No;
+            studentToUpdate.Section = student.Section;
+            obj.SaveChanges();
+
+            //if (TryUpdateModel(studentToUpdate, "", new string[] { "User_Id", "First_Name", "Last_Name", "Pasword", "Contact_No", "Section" }))
+            //{
+            //    obj.SaveChanges();
+            //}
             return RedirectToAction("ManageStudent", "SuperUser");
         }
 
@@ -178,10 +192,15 @@ namespace FYP.Controllers
         public ActionResult EditExamController(User examController)
         {
             var examControllerToUpdate = obj.Users.First(x => x.User_Id.Equals(examController.User_Id));
-            if (TryUpdateModel(examControllerToUpdate, "", new string[] { "User_Id", "First_Name", "Last_Name", "Pasword", "Contact_No"}))
-            {
-                obj.SaveChanges();
-            }
+            examControllerToUpdate.First_Name = examController.First_Name;
+            examControllerToUpdate.Last_Name = examController.Last_Name;
+            examControllerToUpdate.Password = examController.Password;
+            examControllerToUpdate.Contact_No = examController.Contact_No;
+            obj.SaveChanges();
+            //if (TryUpdateModel(examControllerToUpdate, "", new string[] { "User_Id", "First_Name", "Last_Name", "Pasword", "Contact_No"}))
+            //{
+            //    obj.SaveChanges();
+            //}
             return RedirectToAction("ManageExamController", "SuperUser");
         }
 
@@ -389,6 +408,78 @@ namespace FYP.Controllers
 
 
 
+        public ActionResult ManageFreezeStudents()
+        {
+            var students = obj.Users.Where(x => x.Batch.Status == "Active" && x.Status == "Active" || x.Status == "Freeze");
+            ViewBag.freezeerror = TempData["freezeerror"];
+            return View(students);
+        }
+
+     
+        public ActionResult FreezeStudent(string User_Id)
+        {
+            try
+            {
+                var f = obj.Freezes.First(x => x.Student_Id == User_Id);
+                TempData["freezeerror"] = "Cannot freeze " + f.Student_Id + " again because this facility was already availed in the past!";
+                return RedirectToAction("ManageFreezeStudents", "SuperUser");
+            }
+            catch
+            {
+
+                var u = obj.Users.First(x => x.User_Id == User_Id);
+                return View(u);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult FreezeStudent(string User_Id, DateTime Freezing_Date)
+        {
+            //try
+            //{
+                //var f = obj.Freezes.First(x => x.Student_Id == User_Id);
+                //TempData["freezeerror"] = "Cannot freeze " + f.Student_Id +" again because this facility was already availed in the past!";
+            //}
+            //catch
+            //{
+                Freeze freeze = new Freeze();
+                var u = obj.Users.First(x => x.User_Id == User_Id);
+                freeze.Student_Id = u.User_Id;
+                freeze.Freezing_Date = Freezing_Date;
+                freeze.Status = "Freeze";
+                u.Status = "Freeze";
+                obj.Freezes.Add(freeze);
+                obj.SaveChanges();
+            //}
+
+            return RedirectToAction("ManageFreezeStudents","SuperUser");
+        }
+
+        public ActionResult UnFreezeStudent(string User_Id)
+        {
+            var u = obj.Users.First(x => x.User_Id == User_Id);
+            return View(u);
+        }
+
+        [HttpPost]
+        public ActionResult UnFreezeStudent(string User_Id, DateTime UnFreezing_Date, string Batch_Id)
+        {
+            var u = obj.Users.First(x => x.User_Id == User_Id);
+
+            var f = obj.Freezes.First(x => x.Student_Id == User_Id);
+
+            u.Status = "Active";
+            u.Batch_Id = Batch_Id;
+
+            f.Unfreezing_Date = UnFreezing_Date;
+            f.Status = "Active";
+
+            obj.SaveChanges();
+
+            return RedirectToAction("ManageFreezeStudents", "SuperUser");
+        }
+
+
 
 
         //Activate or Deactivate Subject
@@ -436,6 +527,24 @@ namespace FYP.Controllers
                 return Json(null);
             }
         }
+
+
+        [HttpPost]
+        public JsonResult AjaxMethodForBatchInFreeze(string User_Id)
+        {
+            try
+            {
+                var s = obj.Users.First(x => x.User_Id == User_Id);
+                var b = obj.Batches.Where(x => x.Department_Id == s.Department_Id);
+
+                return Json(b.Select(x => new { x.Batch_Id }));
+            }
+            catch
+            {
+                return Json(null);
+            }
+        }
+
 
         [HttpPost]
         public JsonResult AjaxMethodForBatchInAddSubject()

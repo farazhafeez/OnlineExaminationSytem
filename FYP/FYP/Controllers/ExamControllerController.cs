@@ -22,7 +22,7 @@ namespace FYP.Controllers
 
         public ActionResult ManageExam()
         {
-            var exams = obj.Exams.Include(a=>a.Schedules).Where(x => x.Status != "Mid_Conducted" && x.Status != "Final_Conducted");
+            var exams = obj.Exams.Include(a=>a.Schedules).Where(x => x.Status != "Mid_Exam" && x.Status != "Final_Exam");
             ViewBag.midexamerrors = TempData["midexamerrors"];
             ViewBag.finalexamerrors = TempData["finalexamerrors"];
             return View(exams);
@@ -47,27 +47,34 @@ namespace FYP.Controllers
 
             List<Enrolled> enrollmentList = new List<Enrolled>();
 
-            var conductedExams = obj.Exams.Where(x => x.Status.Equals("Mid_Conducted") || x.Status.Equals("Final_Conducted"));
+            var conductedExams = obj.Exams.Where(x => x.Status.Equals("Mid_Exam") || x.Status.Equals("Final_Exam"));
 
             //getting all enrollment rows that have exams conducted
             foreach (var i in conductedExams)
             {
-                var allEnrolledsForConductedExams = obj.Enrolleds.Where(x => x.Exam_Id == i.Exam_Id);
-                var allDropOutForConductedExams = obj.Drop_Out.Where(x => x.Exam_Id == i.Exam_Id);
+                //var allEnrolledsForConductedExams = obj.Enrolleds.Where(x => x.Exam_Id == i.Exam_Id);
+                //var allDropOutForConductedExams = obj.Drop_Out.Where(x => x.Exam_Id == i.Exam_Id);
                 var allSchedulesForConductedExams = obj.Schedules.Where(x => x.Exam_Id == i.Exam_Id);
-                foreach (var j in allEnrolledsForConductedExams)
-                {
-                    obj.Enrolleds.Remove(j);
-                }
-                foreach (var j in allDropOutForConductedExams)
-                {
-                    obj.Drop_Out.Remove(j);
-                }
+
                 foreach (var j in allSchedulesForConductedExams)
                 {
-                    obj.Schedules.Remove(j);
+                    if(DateTime.Now > j.Time_To)
+                    {
+                        var allEnrolleds = obj.Enrolleds.Where(x => x.Exam_Id == j.Exam_Id);
+                        foreach (var k in allEnrolleds)
+                        {
+                            obj.Enrolleds.Remove(k);
+                        }
+                        var allDropOuts = obj.Drop_Out.Where(x => x.Exam_Id == j.Exam_Id);
+                        foreach (var l in allDropOuts)
+                        {
+                            obj.Drop_Out.Remove(l);
+                        }
+                        obj.Schedules.Remove(j);
+                    }
                 }
             }
+
             obj.SaveChanges();
            
 
@@ -118,7 +125,7 @@ namespace FYP.Controllers
             else if (examTerm.Equals("Final"))
             {
                 marks = 50;
-                var midExams = obj.Exams.Where(x => x.Exam_Session.Equals(examSession) && x.Status.Equals("Mid_Conducted"));
+                var midExams = obj.Exams.Where(x => x.Exam_Session.Equals(examSession) && x.Status.Equals("Mid_Exam"));
                 foreach (var i in subjects)
                 {
                     try

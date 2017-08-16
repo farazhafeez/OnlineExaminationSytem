@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="FYP_DB_Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="FYP_DB_Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Batch">
           <Key>
             <PropertyRef Name="Batch_Id" />
@@ -138,6 +138,7 @@
           <Property Name="Department_Id" Type="nvarchar" MaxLength="255" />
           <Property Name="Section" Type="nvarchar" MaxLength="255" />
           <Property Name="Status" Type="nvarchar" MaxLength="255" />
+          <Property Name="User_Image" Type="varbinary(max)" />
         </EntityType>
         <Association Name="Batch$DepartmentBatch">
           <End Role="Department" Type="Self.Department" Multiplicity="0..1" />
@@ -477,7 +478,8 @@
             <End Role="User" EntitySet="User" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="FYP_DB_Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -543,6 +545,15 @@
           <NavigationProperty Name="Papers" Relationship="Self.Paper_ExamPaper" FromRole="Exam" ToRole="Paper" />
           <NavigationProperty Name="Results" Relationship="Self.Result_ExamResult" FromRole="Exam" ToRole="Result" />
           <NavigationProperty Name="Schedules" Relationship="Self.Schedule_ExamSchedule" FromRole="Exam" ToRole="Schedule" />
+        </EntityType>
+        <EntityType Name="Freeze">
+          <Key>
+            <PropertyRef Name="Student_Id" />
+          </Key>
+          <Property Name="Student_Id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Freezing_Date" Type="DateTime" Precision="0" />
+          <Property Name="Unfreezing_Date" Type="DateTime" Precision="0" />
+          <Property Name="Status" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Option">
           <Key>
@@ -639,6 +650,7 @@
           <Property Name="Department_Id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Section" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="User_Image" Type="Binary" MaxLength="Max" FixedLength="false" />
           <NavigationProperty Name="Batch" Relationship="Self.User_SemesterUser" FromRole="User" ToRole="Batch" />
           <NavigationProperty Name="Department" Relationship="Self.User_DepartmentUser" FromRole="User" ToRole="Department" />
           <NavigationProperty Name="Drop_Out" Relationship="Self.Drop_Out_UserDrop_Out" FromRole="User" ToRole="Drop_Out" />
@@ -894,6 +906,7 @@
           <EntitySet Name="Drop_Out" EntityType="Self.Drop_Out" />
           <EntitySet Name="Enrolleds" EntityType="Self.Enrolled" />
           <EntitySet Name="Exams" EntityType="Self.Exam" />
+          <EntitySet Name="Freezes" EntityType="Self.Freeze" />
           <EntitySet Name="Options" EntityType="Self.Option" />
           <EntitySet Name="Papers" EntityType="Self.Paper" />
           <EntitySet Name="Questions" EntityType="Self.Question" />
@@ -982,17 +995,7 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Subject" EntitySet="Subjects" />
           </AssociationSet>
-          <EntitySet Name="Freezes" EntityType="FYP_DB_Model.Freeze" />
         </EntityContainer>
-        <EntityType Name="Freeze">
-          <Key>
-            <PropertyRef Name="Student_Id" />
-          </Key>
-          <Property Name="Student_Id" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Freezing_Date" Type="DateTime" Precision="0" />
-          <Property Name="Unfreezing_Date" Type="DateTime" Precision="0" />
-          <Property Name="Status" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1044,6 +1047,16 @@
                 <ScalarProperty Name="Batch_Id" ColumnName="Batch_Id" />
                 <ScalarProperty Name="Department_Id" ColumnName="Department_Id" />
                 <ScalarProperty Name="Exam_Session" ColumnName="Exam_Session" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Freezes">
+            <EntityTypeMapping TypeName="FYP_DB_Model.Freeze">
+              <MappingFragment StoreEntitySet="Freeze">
+                <ScalarProperty Name="Student_Id" ColumnName="Student_Id" />
+                <ScalarProperty Name="Freezing_Date" ColumnName="Freezing_Date" />
+                <ScalarProperty Name="Unfreezing_Date" ColumnName="Unfreezing_Date" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1134,16 +1147,7 @@
                 <ScalarProperty Name="Department_Id" ColumnName="Department_Id" />
                 <ScalarProperty Name="Section" ColumnName="Section" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Freezes">
-            <EntityTypeMapping TypeName="FYP_DB_Model.Freeze">
-              <MappingFragment StoreEntitySet="Freeze">
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="Unfreezing_Date" ColumnName="Unfreezing_Date" />
-                <ScalarProperty Name="Freezing_Date" ColumnName="Freezing_Date" />
-                <ScalarProperty Name="Student_Id" ColumnName="Student_Id" />
+                <ScalarProperty Name="User_Image" ColumnName="User_Image" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

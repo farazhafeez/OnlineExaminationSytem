@@ -130,7 +130,6 @@
                 },
                 User_Id: {
                     required: true,
-                    email: true,
                     remote: {
                         url: "/SuperUser/IsUser_IdAvailable",
                         type: "post",
@@ -162,7 +161,6 @@
                 },
                 User_Id: {
                     required: "Please enter user id!",
-                    email: "This is not a valid email!",
                     remote: "User id already exists!",
                 },
 

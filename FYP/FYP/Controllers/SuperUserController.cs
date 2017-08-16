@@ -27,6 +27,14 @@ namespace FYP.Controllers
 
 
 
+        public ActionResult UserImage()
+        {
+            return View();
+        }
+
+
+
+
 
         //Teacher Accounts
         public ActionResult ManageTeacher()
@@ -435,22 +443,14 @@ namespace FYP.Controllers
         [HttpPost]
         public ActionResult FreezeStudent(string User_Id, DateTime Freezing_Date)
         {
-            //try
-            //{
-                //var f = obj.Freezes.First(x => x.Student_Id == User_Id);
-                //TempData["freezeerror"] = "Cannot freeze " + f.Student_Id +" again because this facility was already availed in the past!";
-            //}
-            //catch
-            //{
-                Freeze freeze = new Freeze();
-                var u = obj.Users.First(x => x.User_Id == User_Id);
-                freeze.Student_Id = u.User_Id;
-                freeze.Freezing_Date = Freezing_Date;
-                freeze.Status = "Freeze";
-                u.Status = "Freeze";
-                obj.Freezes.Add(freeze);
-                obj.SaveChanges();
-            //}
+            Freeze freeze = new Freeze();
+            var u = obj.Users.First(x => x.User_Id == User_Id);
+            freeze.Student_Id = u.User_Id;
+            freeze.Freezing_Date = Freezing_Date;
+            freeze.Status = "Freeze";
+            u.Status = "Freeze";
+            obj.Freezes.Add(freeze);
+            obj.SaveChanges();
 
             return RedirectToAction("ManageFreezeStudents","SuperUser");
         }

@@ -30,6 +30,7 @@ namespace FYP.Models
         public DbSet<Drop_Out> Drop_Out { get; set; }
         public DbSet<Enrolled> Enrolleds { get; set; }
         public DbSet<Exam> Exams { get; set; }
+        public DbSet<Freeze> Freezes { get; set; }
         public DbSet<Option> Options { get; set; }
         public DbSet<Paper> Papers { get; set; }
         public DbSet<Question> Questions { get; set; }
@@ -38,6 +39,5 @@ namespace FYP.Models
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<Freeze> Freezes { get; set; }
     }
 }

@@ -71,6 +71,10 @@ namespace FYP.Controllers
                             obj.Drop_Out.Remove(l);
                         }
                         obj.Schedules.Remove(j);
+                        if (i.Total_Marks == 30)
+                            i.Status = "Mid_Conducted";
+                        else if (i.Total_Marks == 50)
+                            i.Status = "Final_Conducted";
                     }
                 }
             }
@@ -125,7 +129,7 @@ namespace FYP.Controllers
             else if (examTerm.Equals("Final"))
             {
                 marks = 50;
-                var midExams = obj.Exams.Where(x => x.Exam_Session.Equals(examSession) && x.Status.Equals("Mid_Exam"));
+                var midExams = obj.Exams.Where(x => x.Exam_Session.Equals(examSession) && x.Status.Equals("Mid_Conducted"));
                 foreach (var i in subjects)
                 {
                     try

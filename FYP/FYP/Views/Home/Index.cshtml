@@ -6,55 +6,132 @@
 
 <html>
 <head>
-    <title>Admin Login</title>
+    <title>Login</title>
     <style>
-        body {
-            margin: 0px;
+        body, html {
+            height: 100%;
+            background-repeat: no-repeat;
+            background-size:cover;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.99), rgba(0, 0, 0, 0.5)), url('../../Content/images/bg1.jpg');
+        }
+
+        .login_box {
+            background: #f7f7f7;
+            border: 3px solid #F4F4F4;
+            padding-left: 15px;
+            margin-bottom: 25px;
+        }
+
+        .input_title {
+            color: rgb(0, 0, 0);
+            padding-left: 3px;
+            margin-bottom: 2px;
+        }
+
+        hr {
+            width: 100%;
+        }
+
+
+        .login_title {
+            font-family: "myriad-pro",sans-serif;
+            font-style: normal;
+            font-weight: 100;
+            color: rgba(164, 164, 164, 0.9);
+        }
+
+
+        .btn {
+            font-weight: 700;
+            height: 36px;
+            user-select: none;
+            cursor: default;
+            border-radius: 0;
+            background: #43A6EB;
+            height: 55px;
+            margin-bottom: 10px;
+        }
+
+        .card {
+            max-width: 350px;
+            background-color: #FFFFFF;
+            /* just in case there no content*/
+            padding: 1px 25px 30px;
+            margin: 0 auto 25px;
+            margin-top: 15%;
+            /* shadows and rounded borders */
+            border-radius: 2px;
+            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+
+        .reauth-email {
+            display: block;
+            color: #404040;
+            line-height: 2;
+            margin-bottom: 10px;
+            font-size: 14px;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            box-sizing: border-box;
+        }
+
+        .form #inputEmail,
+        .form #inputPassword {
+            height: 44px;
+            font-size: 16px;
+            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .form input,
+        .form button {
+            width: 100%;
+            display: block;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+
+        .btn.btn-signin {
+            background-color: rgb(104, 145, 162);
             padding: 0px;
+            font-weight: 700;
+            font-size: 14px;
+            height: 36px;
+            border-radius: 3px;
+            border: none;
         }
 
-        h2:hover {
-            color: #1A5276;
-        }
+            .btn.btn-signin:hover,
+            .btn.btn-signin:active,
+            .btn.btn-signin:focus {
+                background-color: rgb(12, 97, 33);
+            }
 
-        h5:hover {
-            color: #1A5276;
-        }
     </style>
 </head>
 <body>
-    <a href="/home/index" class="navbar-brand" style="text-decoration: none; color: #2E86C1;"><h2>ONLINE EXAMINATION SYSTEM</h2></a>
-    <br><br><br>
-    <hr>
     <div class="container">
-        <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-                <h2 style="text-align: center; color: #2E86C1; ">Sign In to continue...</h2>
-                <hr style="padding: 0px; border: 1px solid #3CCAE6;">
-                <h4 class="alert-danger" style="text-align:center; border-radius:4px;">@ViewBag.Message</h4>
-                <div class="row" style="padding:0px;">
-                    <div class="col-md-12">
-                        @using(Html.BeginForm(FormMethod.Post))
-                        {
-                            <div class="well">
-                                <div class="form-group">
-                                    @Html.Label("User Id", new { @style = "line-height:30px"})
-                                    @Html.TextBoxFor(a =>a.User_Id, new { @class = "form-control"})
-                                    @Html.ValidationMessageFor(a => a.User_Id)
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(a => a.Password, new { @style = "line-height:30px" })
-                                    @Html.PasswordFor(a => a.Password, new { @class = "form-control" })
-                                    @Html.ValidationMessageFor(a => a.Password)
-                                </div>
-                                <input type="submit" value="login" class="btn btn-primary" style="width:100%;">
-                            </div>
-                        }
-                    </div>
-                </div>
+        <div class="card">
+            <div style="vertical-align:middle;">
+            <h2 class='login_title text-center'>Login</h2>
+            <hr>
+            @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form", @style= "vertical-align:middle;" }))
+            {
+                @Html.Label("Username", new { @class = "input_title" })
+                @Html.TextBoxFor(a => a.User_Id, new { @id = "inputEmail", @class = "login_box", @placeholder = "", required = "required", autofocus = "autofocus" })
+                @Html.ValidationMessageFor(a => a.User_Id)
+
+                @Html.Label("Password", new { @class = "input_title" })
+                @Html.PasswordFor(a => a.Password, new { @id = "inputPassword", @class = "login_box", @placeholder = "", required = "required" })
+                @Html.ValidationMessageFor(a => a.Password)
+
+                <button class="btn btn-lg btn-primary" type="submit">Login</button>
+            }
             </div>
-            <div class="col-md-4"></div>
         </div>
     </div>
 </body>

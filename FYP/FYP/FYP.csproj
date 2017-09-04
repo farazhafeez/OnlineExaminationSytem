@@ -209,6 +209,8 @@
     <Content Include="Content\css\bootstrap.css" />
     <Content Include="Content\css\bootstrap.min.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\images\bg.jpg" />
+    <Content Include="Content\images\bg1.jpg" />
     <Content Include="Content\images\home_pic.png" />
     <Content Include="Content\js\bootstrap.js" />
     <Content Include="Content\js\bootstrap.min.js" />
@@ -364,20 +366,20 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>FYP_DB_Model.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <Content Include="Models\FYP_DB_Model.edmx.diagram">
+      <DependentUpon>FYP_DB_Model.edmx</DependentUpon>
+    </Content>
+    <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Models\FYP_DB_Model.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>FYP_DB_Model.edmx</DependentUpon>
       <LastGenOutput>FYP_DB_Model.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\FYP_DB_Model.edmx.diagram">
-      <DependentUpon>FYP_DB_Model.edmx</DependentUpon>
     </Content>
     <Content Include="Models\FYP_DB_Model.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>FYP_DB_Model.edmx</DependentUpon>
       <LastGenOutput>FYP_DB_Model.cs</LastGenOutput>
     </Content>
-    <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap-multiselect.js" />

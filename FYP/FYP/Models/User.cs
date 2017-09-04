@@ -32,7 +32,7 @@ namespace FYP.Models
         public string Department_Id { get; set; }
         public string Section { get; set; }
         public string Status { get; set; }
-        public byte[] User_Image { get; set; }
+        public string Gender { get; set; }
     
         public virtual Batch Batch { get; set; }
         public virtual Department Department { get; set; }

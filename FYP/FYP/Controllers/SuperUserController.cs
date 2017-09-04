@@ -21,16 +21,16 @@ namespace FYP.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
-
-
-
-        public ActionResult UserImage()
-        {
-            return View();
-        }
 
 
 
@@ -39,50 +39,80 @@ namespace FYP.Controllers
         //Teacher Accounts
         public ActionResult ManageTeacher()
         {
-            var u = obj.Users.Where(a => a.Role.Equals("Teacher") && a.Status.Equals("Active"));
-            return View(u);
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                var u = obj.Users.Where(a => a.Role.Equals("Teacher") && a.Status.Equals("Active"));
+                return View(u);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         public ActionResult AddTeacher()
         {
-
-            return View();
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
         [HttpPost]
         public ActionResult AddTeacher(User user)
         {
-            User u = new User();
-            u = user;
-            u.Status = "Active";
-            u.Role = "Teacher";
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                User u = new User();
+                u = user;
+                u.Status = "Active";
+                u.Role = "Teacher";
 
-            obj.Users.Add(u);
-            obj.SaveChanges();
-            return RedirectToAction("ManageTeacher", "SuperUser");
+                obj.Users.Add(u);
+                obj.SaveChanges();
+                return RedirectToAction("ManageTeacher", "SuperUser");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         public ActionResult EditTeacher(string User_Id)
         {
-            User u = obj.Users.Find(User_Id);
-            return View(u);
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                User u = obj.Users.Find(User_Id);
+                return View(u);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpPost]
         public ActionResult EditTeacher(User teacher)
         {
-            var teacherToUpdate = obj.Users.First(x => x.User_Id.Equals(teacher.User_Id));
-            teacherToUpdate.First_Name = teacher.First_Name;
-            teacherToUpdate.Last_Name = teacher.Last_Name;
-            teacherToUpdate.Password = teacher.Password;
-            teacherToUpdate.Contact_No = teacher.Contact_No;
-            teacherToUpdate.Department = teacher.Department;
-            obj.SaveChanges();
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                var teacherToUpdate = obj.Users.First(x => x.User_Id.Equals(teacher.User_Id));
+                teacherToUpdate.First_Name = teacher.First_Name;
+                teacherToUpdate.Last_Name = teacher.Last_Name;
+                teacherToUpdate.Password = teacher.Password;
+                teacherToUpdate.Contact_No = teacher.Contact_No;
+                teacherToUpdate.Department = teacher.Department;
+                obj.SaveChanges();
 
-            //if (TryUpdateModel(teacherToUpdate, "", new string[] { "User_Id", "First_Name", "Last_Name", "Pasword", "Contact_No", "Department_Id" }))
-            //{
-            //    obj.SaveChanges();
-            //}
-            return RedirectToAction("ManageTeacher", "SuperUser");
+                return RedirectToAction("ManageTeacher", "SuperUser");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
 
@@ -92,57 +122,88 @@ namespace FYP.Controllers
         //Student Accounts
         public ActionResult ManageStudent()
         {
-            try
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
             {
-                var u = obj.Users.Where(a => a.Role.Equals("Student") && a.Status.Equals("Active"));
+                try
+                {
+                    var u = obj.Users.Where(a => a.Role.Equals("Student") && a.Status.Equals("Active"));
 
-                return View(u);
+                    return View(u);
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "SuperUser");
+                }
             }
-            catch
+            else
             {
-                return RedirectToAction("Index", "SuperUser");
+                return RedirectToAction("Index", "Home");
             }
         }
 
         public ActionResult AddStudent()
         {
-            return View();
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
         [HttpPost]
         public ActionResult AddStudent(User user)
         {
-            User u = new User();
-            u = user;
-            u.Status = "Active";
-            u.Role = "Student";
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                User u = new User();
+                u = user;
+                u.Status = "Active";
+                u.Role = "Student";
 
-            obj.Users.Add(u);
-            obj.SaveChanges();
-            return RedirectToAction("ManageStudent", "SuperUser");
+                obj.Users.Add(u);
+                obj.SaveChanges();
+                return RedirectToAction("ManageStudent", "SuperUser");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         public ActionResult EditStudent(String User_Id)
         {
-            User u = obj.Users.Find(User_Id);
-            return View(u);
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                User u = obj.Users.Find(User_Id);
+                return View(u);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpPost]
         public ActionResult EditStudent(User student)
         {
-            var studentToUpdate = obj.Users.First(x => x.User_Id.Equals(student.User_Id));
-            studentToUpdate.First_Name = student.First_Name;
-            studentToUpdate.Last_Name = student.Last_Name;
-            studentToUpdate.Password = student.Password;
-            studentToUpdate.Contact_No = student.Contact_No;
-            studentToUpdate.Section = student.Section;
-            obj.SaveChanges();
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                var studentToUpdate = obj.Users.First(x => x.User_Id.Equals(student.User_Id));
+                studentToUpdate.First_Name = student.First_Name;
+                studentToUpdate.Last_Name = student.Last_Name;
+                studentToUpdate.Password = student.Password;
+                studentToUpdate.Contact_No = student.Contact_No;
+                studentToUpdate.Section = student.Section;
+                obj.SaveChanges();
 
-            //if (TryUpdateModel(studentToUpdate, "", new string[] { "User_Id", "First_Name", "Last_Name", "Pasword", "Contact_No", "Section" }))
-            //{
-            //    obj.SaveChanges();
-            //}
-            return RedirectToAction("ManageStudent", "SuperUser");
+                return RedirectToAction("ManageStudent", "SuperUser");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
 
@@ -157,59 +218,88 @@ namespace FYP.Controllers
         //Exam controller accounts
         public ActionResult ManageExamController()
         {
-            try
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
             {
-                var u = obj.Users.Where(a => a.Role.Equals("Exam_Controller") && a.Status.Equals("Active"));
+                try
+                {
+                    var u = obj.Users.Where(a => a.Role.Equals("Exam_Controller") && a.Status.Equals("Active"));
 
-                return View(u);
+                    return View(u);
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "SuperUser");
+                }
             }
-            catch
+            else
             {
-                return RedirectToAction("Index", "SuperUser");
+                return RedirectToAction("Index", "Home");
             }
         }
 
         public ActionResult AddExamController()
         {
-
-            return View();
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpPost]
         public ActionResult AddExamController(User user)
         {
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                User u = new User();
+                u = user;
+                u.Status = "Active";
+                u.Role = "Exam_Controller";
 
-            User u = new User();
-            u = user;
-            u.Status = "Active";
-            u.Role = "Exam_Controller";
-
-            obj.Users.Add(u);
-            obj.SaveChanges();
-            return RedirectToAction("ManageExamController", "SuperUser");
-
+                obj.Users.Add(u);
+                obj.SaveChanges();
+                return RedirectToAction("ManageExamController", "SuperUser");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         public ActionResult EditExamController(string User_Id)
         {
-            User u = obj.Users.Find(User_Id);
-            return View(u);
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                User u = obj.Users.Find(User_Id);
+                return View(u);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpPost]
         public ActionResult EditExamController(User examController)
         {
-            var examControllerToUpdate = obj.Users.First(x => x.User_Id.Equals(examController.User_Id));
-            examControllerToUpdate.First_Name = examController.First_Name;
-            examControllerToUpdate.Last_Name = examController.Last_Name;
-            examControllerToUpdate.Password = examController.Password;
-            examControllerToUpdate.Contact_No = examController.Contact_No;
-            obj.SaveChanges();
-            //if (TryUpdateModel(examControllerToUpdate, "", new string[] { "User_Id", "First_Name", "Last_Name", "Pasword", "Contact_No"}))
-            //{
-            //    obj.SaveChanges();
-            //}
-            return RedirectToAction("ManageExamController", "SuperUser");
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                var examControllerToUpdate = obj.Users.First(x => x.User_Id.Equals(examController.User_Id));
+                examControllerToUpdate.First_Name = examController.First_Name;
+                examControllerToUpdate.Last_Name = examController.Last_Name;
+                examControllerToUpdate.Password = examController.Password;
+                examControllerToUpdate.Contact_No = examController.Contact_No;
+                obj.SaveChanges();
+
+                return RedirectToAction("ManageExamController", "SuperUser");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
 
@@ -220,74 +310,117 @@ namespace FYP.Controllers
         //Subjects
         public ActionResult ManageSubject()
         {
-            var s = obj.Subjects.Where(x => x.Status.Equals("Active"));
-            return View(s);
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                var s = obj.Subjects.Where(x => x.Status.Equals("Active"));
+                return View(s);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
         }
 
         public ActionResult AddSubject()
         {
-            return View();
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpPost]
         public ActionResult AddSubject(Subject sub, string[] Section)
         {
-            sub.Section = null;
-
-            Subject s = new Subject();
-            s.Subject_Id = sub.Subject_Id;
-            int a = 1;
-            foreach(var i in Section)
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
             {
-                if(a == 1)
-                {
-                    s.Section = i;
-                    a++;
-                }
-                else
-                {
-                    s.Section = s.Section + "," + i;
-                }
-            }
-            s.Subject_Name = sub.Subject_Name;
-            s.User_Id = sub.User_Id;
-            s.Batch_Id = sub.Batch_Id;
-            s.Status = "Active";
-            obj.Subjects.Add(s);
-            obj.SaveChanges();
+                sub.Section = null;
 
-            return RedirectToAction("ManageSubject");
+                Subject s = new Subject();
+                s.Subject_Id = sub.Subject_Id;
+                int a = 1;
+                foreach (var i in Section)
+                {
+                    if (a == 1)
+                    {
+                        s.Section = i;
+                        a++;
+                    }
+                    else
+                    {
+                        s.Section = s.Section + "," + i;
+                    }
+                }
+                s.Subject_Name = sub.Subject_Name;
+                s.User_Id = sub.User_Id;
+                s.Batch_Id = sub.Batch_Id;
+                s.Status = "Active";
+                obj.Subjects.Add(s);
+                obj.SaveChanges();
+
+                return RedirectToAction("ManageSubject");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         public ActionResult EditSubject(string Subject_Id)
         {
-            try
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
             {
-                var s = obj.Subjects.First(x => x.Subject_Id.Equals(Subject_Id));
-                return View(s);
+                try
+                {
+                    var s = obj.Subjects.First(x => x.Subject_Id.Equals(Subject_Id));
+                    return View(s);
+                }
+                catch
+                {
+                    return View();
+                }
             }
-            catch
+            else
             {
-                return View();
+                return RedirectToAction("Index", "Home");
             }
         }
 
         [HttpPost]
         public ActionResult EditSubject(Subject subject)
         {
-            var SubjectToUpdate = obj.Subjects.First(x => x.Subject_Id.Equals(subject.Subject_Id));
-            if (TryUpdateModel(SubjectToUpdate, "", new string[] { "Subject_Name", "User_Id", "Batch_Id", "Section" }))
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
             {
-                obj.SaveChanges();
+                var SubjectToUpdate = obj.Subjects.First(x => x.Subject_Id.Equals(subject.Subject_Id));
+                if (TryUpdateModel(SubjectToUpdate, "", new string[] { "Subject_Name", "User_Id", "Batch_Id", "Section" }))
+                {
+                    obj.SaveChanges();
+                }
+                return RedirectToAction("ManageSubject", "SuperUser");
             }
-            return RedirectToAction("ManageSubject", "SuperUser");
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         public ActionResult ShowTeacherSubjects(string User_Id)
         {
-            ViewBag.user = User_Id + "'s";
-            var subjects = obj.Subjects.Where(x => x.User_Id.Equals(User_Id) && x.Status.Equals("Active"));
-            return View(subjects);
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                ViewBag.user = User_Id + "'s";
+                var subjects = obj.Subjects.Where(x => x.User_Id.Equals(User_Id) && x.Status.Equals("Active"));
+                return View(subjects);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
 
@@ -322,27 +455,44 @@ namespace FYP.Controllers
         //Departments
         public ActionResult ManageDepartment()
         {
-            return View(obj.Departments.ToList());
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                return View(obj.Departments.ToList());
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         public ActionResult AddDepartment()
         {
-            return View();
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
+
         [HttpPost]
         public ActionResult AddDepartment(string Department_Id)
         {
-            Department d = new Department();
-            d.Department_Id = Department_Id;
-            obj.Departments.Add(d);
-            obj.SaveChanges();
-            return RedirectToAction("ManageDepartment", "SuperUser");
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                Department d = new Department();
+                d.Department_Id = Department_Id;
+                obj.Departments.Add(d);
+                obj.SaveChanges();
+                return RedirectToAction("ManageDepartment", "SuperUser");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
-
-
-
-
-
 
 
 
@@ -352,23 +502,44 @@ namespace FYP.Controllers
         //Batches
         public ActionResult ManageBatch()
         {
-            var b = obj.Batches.Where(x => x.Status.Equals("Active"));
-            return View(b);
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                var b = obj.Batches.Where(x => x.Status.Equals("Active"));
+                return View(b);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         public ActionResult AddBatch()
         {
-            return View();
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
         [HttpPost]
         public ActionResult AddBatch(Batch batch)
         {
-            Batch b = new Batch();
-            batch.Status = "Active";
-            b = batch;
-            obj.Batches.Add(b);
-            obj.SaveChanges();
-            return RedirectToAction("ManageBatch", "SuperUser");
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                Batch b = new Batch();
+                batch.Status = "Active";
+                b = batch;
+                obj.Batches.Add(b);
+                obj.SaveChanges();
+                return RedirectToAction("ManageBatch", "SuperUser");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
 
@@ -380,36 +551,71 @@ namespace FYP.Controllers
         //Rooms
         public ActionResult ManageRoom()
         {
-            return View(obj.Rooms.ToList());
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                return View(obj.Rooms.ToList());
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         public ActionResult AddRoom()
         {
-            return View();
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpPost]
         public ActionResult AddRoom(Room r)
         {
-            obj.Rooms.Add(r);
-            obj.SaveChanges();
-            return RedirectToAction("ManageRoom", "SuperUser");
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                obj.Rooms.Add(r);
+                obj.SaveChanges();
+                return RedirectToAction("ManageRoom", "SuperUser");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpGet]
         public ActionResult EditRoom(string Room_Id)
         {
-            var r = obj.Rooms.Find(Room_Id);
-            return View(r);
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                var r = obj.Rooms.Find(Room_Id);
+                return View(r);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpPost]
         public ActionResult EditRoom(Room room)
         {
-            var r = obj.Rooms.First(x => x.Room_Id == room.Room_Id);
-            r.Room_Capacity = room.Room_Capacity;
-            obj.SaveChanges();
-            return RedirectToAction("ManageRoom","SuperUser");
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                var r = obj.Rooms.First(x => x.Room_Id == room.Room_Id);
+                r.Room_Capacity = room.Room_Capacity;
+                obj.SaveChanges();
+                return RedirectToAction("ManageRoom", "SuperUser");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
 
@@ -418,65 +624,100 @@ namespace FYP.Controllers
 
         public ActionResult ManageFreezeStudents()
         {
-            var students = obj.Users.Where(x => x.Batch.Status == "Active" && x.Status == "Active" || x.Status == "Freeze");
-            ViewBag.freezeerror = TempData["freezeerror"];
-            return View(students);
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                var students = obj.Users.Where(x => x.Batch.Status == "Active" && x.Status == "Active" || x.Status == "Freeze");
+                ViewBag.freezeerror = TempData["freezeerror"];
+                return View(students);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
      
         public ActionResult FreezeStudent(string User_Id)
         {
-            try
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
             {
-                var f = obj.Freezes.First(x => x.Student_Id == User_Id);
-                TempData["freezeerror"] = "Cannot freeze " + f.Student_Id + " again because this facility was already availed in the past!";
-                return RedirectToAction("ManageFreezeStudents", "SuperUser");
-            }
-            catch
-            {
+                try
+                {
+                    var f = obj.Freezes.First(x => x.Student_Id == User_Id);
+                    TempData["freezeerror"] = "Cannot freeze " + f.Student_Id + " again because this facility was already availed in the past!";
+                    return RedirectToAction("ManageFreezeStudents", "SuperUser");
+                }
+                catch
+                {
 
-                var u = obj.Users.First(x => x.User_Id == User_Id);
-                return View(u);
+                    var u = obj.Users.First(x => x.User_Id == User_Id);
+                    return View(u);
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
             }
         }
 
         [HttpPost]
         public ActionResult FreezeStudent(string User_Id, DateTime Freezing_Date)
         {
-            Freeze freeze = new Freeze();
-            var u = obj.Users.First(x => x.User_Id == User_Id);
-            freeze.Student_Id = u.User_Id;
-            freeze.Freezing_Date = Freezing_Date;
-            freeze.Status = "Freeze";
-            u.Status = "Freeze";
-            obj.Freezes.Add(freeze);
-            obj.SaveChanges();
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                Freeze freeze = new Freeze();
+                var u = obj.Users.First(x => x.User_Id == User_Id);
+                freeze.Student_Id = u.User_Id;
+                freeze.Freezing_Date = Freezing_Date;
+                freeze.Status = "Freeze";
+                u.Status = "Freeze";
+                obj.Freezes.Add(freeze);
+                obj.SaveChanges();
 
-            return RedirectToAction("ManageFreezeStudents","SuperUser");
+                return RedirectToAction("ManageFreezeStudents", "SuperUser");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         public ActionResult UnFreezeStudent(string User_Id)
         {
-            var u = obj.Users.First(x => x.User_Id == User_Id);
-            return View(u);
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                var u = obj.Users.First(x => x.User_Id == User_Id);
+                return View(u);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpPost]
         public ActionResult UnFreezeStudent(string User_Id, DateTime UnFreezing_Date, string Batch_Id)
         {
-            var u = obj.Users.First(x => x.User_Id == User_Id);
+            if (Session["User_Id"] != null && Session["User_Password"] != null)
+            {
+                var u = obj.Users.First(x => x.User_Id == User_Id);
 
-            var f = obj.Freezes.First(x => x.Student_Id == User_Id);
+                var f = obj.Freezes.First(x => x.Student_Id == User_Id);
 
-            u.Status = "Active";
-            u.Batch_Id = Batch_Id;
+                u.Status = "Active";
+                u.Batch_Id = Batch_Id;
 
-            f.Unfreezing_Date = UnFreezing_Date;
-            f.Status = "Active";
+                f.Unfreezing_Date = UnFreezing_Date;
+                f.Status = "Active";
 
-            obj.SaveChanges();
+                obj.SaveChanges();
 
-            return RedirectToAction("ManageFreezeStudents", "SuperUser");
+                return RedirectToAction("ManageFreezeStudents", "SuperUser");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
 

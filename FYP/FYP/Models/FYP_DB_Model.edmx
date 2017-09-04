@@ -138,7 +138,7 @@
           <Property Name="Department_Id" Type="nvarchar" MaxLength="255" />
           <Property Name="Section" Type="nvarchar" MaxLength="255" />
           <Property Name="Status" Type="nvarchar" MaxLength="255" />
-          <Property Name="User_Image" Type="varbinary(max)" />
+          <Property Name="Gender" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <Association Name="Batch$DepartmentBatch">
           <End Role="Department" Type="Self.Department" Multiplicity="0..1" />
@@ -650,7 +650,7 @@
           <Property Name="Department_Id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Section" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="User_Image" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Gender" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Batch" Relationship="Self.User_SemesterUser" FromRole="User" ToRole="Batch" />
           <NavigationProperty Name="Department" Relationship="Self.User_DepartmentUser" FromRole="User" ToRole="Department" />
           <NavigationProperty Name="Drop_Out" Relationship="Self.Drop_Out_UserDrop_Out" FromRole="User" ToRole="Drop_Out" />
@@ -1147,7 +1147,7 @@
                 <ScalarProperty Name="Department_Id" ColumnName="Department_Id" />
                 <ScalarProperty Name="Section" ColumnName="Section" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="User_Image" ColumnName="User_Image" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
